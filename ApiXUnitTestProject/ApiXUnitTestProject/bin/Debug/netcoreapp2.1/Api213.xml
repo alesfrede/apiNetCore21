@@ -1,0 +1,962 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Api213</name>
+    </assembly>
+    <members>
+        <member name="T:Api213.DbInitializer">
+            <summary>
+            DbInitializer
+            </summary>
+        </member>
+        <member name="M:Api213.DbInitializer.Initialize(Api213.V2.Dal.DataContext)">
+            <summary>
+            Initialize
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Api213.DbInitializer.GetTestEntities">
+            <summary>
+            GetTestEntities
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api213.Program">
+            <summary>
+            Program
+            </summary>
+        </member>
+        <member name="M:Api213.Program.Main(System.String[])">
+            <summary>
+            Main
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:Api213.Program.CreateWebHostBuilder(System.String[])">
+            <summary>
+            IWebHostBuilder
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Api213.Startup">
+            <summary>
+            Startup
+            </summary>
+        </member>
+        <member name="M:Api213.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Logging.ILogger{Api213.Startup},Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Api213.Startup"/> class.
+            
+            </summary>
+            <param name="configuration"></param>
+            <param name="logger"></param>
+            <param name="hostingEnvironment"></param>
+        </member>
+        <member name="P:Api213.Startup.HostingEnvironment">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.Startup.Configuration">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.Startup.Logger">
+            <summary>
+            Gets 
+            </summary>
+        </member>
+        <member name="M:Api213.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            This method gets called by the runtime. Use this method to add services to the container.
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:Api213.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.AspNetCore.Mvc.ApiExplorer.IApiVersionDescriptionProvider)">
+            <summary>
+            This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            </summary>
+            <param name="app"></param>
+            <param name="loggerFactory"></param>
+            <param name="provider"></param>
+        </member>
+        <member name="T:Api213.SwaggerDefaultValues">
+            <summary>
+            SwaggerDefaultValues
+            </summary>
+        </member>
+        <member name="M:Api213.SwaggerDefaultValues.Apply(Swashbuckle.AspNetCore.Swagger.Operation,Swashbuckle.AspNetCore.SwaggerGen.OperationFilterContext)">
+            <summary>
+            Applies the filter to the specified operation using the given context.
+            </summary>
+            <param name="operation">The operation to apply the filter to.</param>
+            <param name="context">The current operation filter context.</param>
+        </member>
+        <member name="M:Api213.SwaggerDefaultValues.CreateInfoForApiVersion(Microsoft.AspNetCore.Mvc.ApiExplorer.ApiVersionDescription)">
+            <summary>
+            CreateInfoForApiVersion
+            </summary>
+            <param name="description"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.SwaggerDefaultValues.AddSwaggerGenforService(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            AddSwaggerGen
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:Api213.SwaggerDefaultValues.SwaggerOptionUi(Microsoft.AspNetCore.Mvc.ApiExplorer.IApiVersionDescriptionProvider,Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIOptions)">
+            <summary>
+            using Swashbuckle.AspNetCore.SwaggerUI
+            </summary>
+            <param name="provider"></param>
+            <param name="options"></param>
+        </member>
+        <member name="M:Api213.SwaggerDefaultValues.XmlCommentsFilePath">
+            <summary>
+            Set the comments path for the swagger json and ui.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api213.V2.Controllers.IPetsController">
+            <summary>
+                IPetsController
+            </summary>
+        </member>
+        <member name="M:Api213.V2.Controllers.IPetsController.ReadAllAsync(Api213.V2.Helper.FilteringSortingParams)">
+            <summary>
+                Read All
+            </summary>
+            <param name="filteringSortingParams">sort y custom fields</param>
+            <returns></returns>
+            <response code="200">successfully retrieved.</response>
+        </member>
+        <member name="M:Api213.V2.Controllers.IPetsController.ReadOneAsync(System.String)">
+            <summary>
+                Get by Name
+            </summary>
+            <param name="petName">name</param>
+            <returns>Pet</returns>
+            <response code="200">successfully retrieved.</response>
+            <response code="400">is invalid.</response>
+        </member>
+        <member name="M:Api213.V2.Controllers.IPetsController.CreateAsync(Api213.V2.Dto.PetDto)">
+            <summary>
+                Create new object
+            </summary>
+            <param name="aPet"></param>
+            <returns></returns>
+            <response code="201">successfully Created.</response>
+            <response code="400">BadRequest.</response>
+        </member>
+        <member name="M:Api213.V2.Controllers.IPetsController.UpdateAsync(Api213.V2.Dto.PetDto)">
+            <summary>
+                Replace Objet
+            </summary>
+            <param name="aPet"></param>
+            <returns></returns>
+            <response code="200">successfully retrieved.</response>
+            <response code="400">BadRequest</response>
+            <response code="404">NotFound</response>
+        </member>
+        <member name="M:Api213.V2.Controllers.IPetsController.DeleteAsync(System.String)">
+            <summary>
+                Delete one
+            </summary>
+            <param name="petName">Name of pet</param>
+            <returns></returns>
+            <response code="200">successfully retrieved.</response>
+            <response code="404">NotFound</response>
+        </member>
+        <member name="M:Api213.V2.Controllers.IPetsController.Search(System.String,Api213.V2.Helper.FilteringSortingParams)">
+            <summary>
+                Search
+            </summary>
+            <param name="namelike">by name like</param>
+            <param name="filteringSortingParams">sort</param>
+            <returns>Pets</returns>
+            <response code="200">successfully retrieved.</response>
+            <response code="404">NotFound</response>
+        </member>
+        <member name="M:Api213.V2.Controllers.IPetsController.Patch(System.String,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{Api213.V2.Models.PetEntity})">
+            <summary>
+                JsonPatch to Apply the changes for  properties .
+                {"op" : "replace",
+                "path" : "property",
+                "value" : "newvalue"}
+            </summary>
+            <param name="petName">id</param>
+            <param name="patch">JsonPatchDocument</param>
+            <returns>updated</returns>
+            <response code="200">operation successfully.</response>
+            <response code="400">BadRequest </response>
+            <response code="404">NotFound</response>
+            <response code="405">Unable to update.</response>
+        </member>
+        <member name="T:Api213.V2.Controllers.PetsController">
+            <inheritdoc cref="T:Api213.V2.Controllers.IPetsController" />
+            <summary>
+                Pets Controller
+            </summary>
+        </member>
+        <member name="M:Api213.V2.Controllers.PetsController.#ctor(Api213.V2.Interface.IPetsManager)">
+            <inheritdoc />
+        </member>
+        <member name="M:Api213.V2.Controllers.PetsController.ReadAllAsync(Api213.V2.Helper.FilteringSortingParams)">
+            <inheritdoc />
+            <summary>
+                Read All
+            </summary>
+            <param name="filteringSortingParams">sort y custom fields</param>
+            <returns></returns>
+            <response code="200">successfully retrieved.</response>
+        </member>
+        <member name="M:Api213.V2.Controllers.PetsController.ReadOneAsync(System.String)">
+            <inheritdoc />
+            <summary>
+                Get by Name
+            </summary>
+            <param name="petName">name</param>
+            <returns>Pet</returns>
+            <response code="200">successfully retrieved.</response>
+            <response code="400">is invalid.</response>
+            <response code="404">NotFound.</response>
+        </member>
+        <member name="M:Api213.V2.Controllers.PetsController.CreateAsync(Api213.V2.Dto.PetDto)">
+            <inheritdoc />
+            <summary>
+                Create new object
+            </summary>
+            <param name="aPet"></param>
+            <returns></returns>
+            <response code="201">successfully Created.</response>
+            <response code="405">Unable to create.</response>
+            <response code="400">BadRequest.</response>
+        </member>
+        <member name="M:Api213.V2.Controllers.PetsController.UpdateAsync(Api213.V2.Dto.PetDto)">
+            <inheritdoc />
+            <summary>
+                Replace Objet
+            </summary>
+            <param name="aPet"></param>
+            <returns></returns>
+            <response code="200">successfully retrieved.</response>
+            <response code="400">BadRequest</response>
+            <response code="404">NotFound</response>
+        </member>
+        <member name="M:Api213.V2.Controllers.PetsController.DeleteAsync(System.String)">
+            <inheritdoc />
+            <summary>
+                Delete one
+            </summary>
+            <param name="petName">Name of pet</param>
+            <returns></returns>
+            <response code="200">successfully retrieved.</response>
+            <response code="404">NotFound</response>
+        </member>
+        <member name="M:Api213.V2.Controllers.PetsController.Search(System.String,Api213.V2.Helper.FilteringSortingParams)">
+            <inheritdoc />
+            <summary>
+                Search
+            </summary>
+            <param name="namelike">by name like</param>
+            <param name="filteringSortingParams">sort</param>
+            <returns>Pets</returns>
+            <response code="200">successfully retrieved.</response>
+            <response code="404">NotFound</response>
+        </member>
+        <member name="M:Api213.V2.Controllers.PetsController.Patch(System.String,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{Api213.V2.Models.PetEntity})">
+            <summary>
+                JsonPatch to Apply the changes for  properties .
+                {"op" : "replace",
+                "path" : "property",
+                "value" : "newvalue"}
+            </summary>
+            <param name="petName">id</param>
+            <param name="patch">JsonPatchDocument</param>
+            <returns>updated</returns>
+            <response code="200">operation successfully.</response>
+            <response code="400">BadRequest </response>
+            <response code="404">NotFound</response>
+            <response code="405">Unable to update.</response>
+        </member>
+        <member name="M:Api213.V2.Controllers.PetsController.InvalidResponseFactory(Microsoft.AspNetCore.Mvc.ObjectResult)">
+            <summary>
+            InvalidResponseFactory for ObjectResult
+            </summary>
+            <param name="objectResult"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Controllers.PetsController.InvalidResponseFactory(System.Nullable{System.Int32},System.String)">
+            <summary>
+            Errors : InvalidResponseFactory
+            </summary>
+            <param name="code"></param>
+            <param name="extraMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Controllers.PetsController.ToView(Api213.V2.Models.PetEntity)">
+            <summary>
+                map
+            </summary>
+            <param name="pet"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Controllers.PetsController.Map(Api213.V2.Dto.PetDto)">
+            <summary>
+                map
+            </summary>
+            <param name="aPet"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Controllers.PetsController.CreatedLocation201(Api213.V2.Dto.PetDto)">
+            <summary>
+                Status201Created + URI read new object
+            </summary>
+            <param name="oPet"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Api213.V2.Controllers.ValuesController">
+            <inheritdoc />
+        </member>
+        <member name="M:Api213.V2.Controllers.ValuesController.Get">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api213.V2.Dal.DataContext">
+            <inheritdoc />
+        </member>
+        <member name="M:Api213.V2.Dal.DataContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{Api213.V2.Dal.DataContext})">
+            <inheritdoc />
+            <summary>
+            Initializes a new instance of the <see cref="T:Api213.V2.Dal.DataContext"/> class.
+            DataContext
+            </summary>
+            <param name="options"></param>
+        </member>
+        <member name="P:Api213.V2.Dal.DataContext.PetInputs">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Api213.V2.Dal.Extension.ExtensionClass">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api213.V2.Dal.Extension.ExtensionClass.Sort``1(System.Linq.IQueryable{``0},System.String)">
+            <summary>
+            order by list by string sort
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="source"></param>
+            <param name="sort"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Dal.Extension.ExtensionClass.LimitingFields``1(System.Linq.IQueryable{``0},System.String,System.Type)">
+            <summary>
+            GET /x?fields=id,subject,customer_name,updated_at 
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="source"></param>
+            <param name="fields"></param>
+            <param name="objectType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Dal.Extension.ExtensionClass.To_Core(System.String)">
+            <summary>
+            +id,-name  TO id asc,name desc
+            soporte a System.Linq.Dynamic.Core
+            </summary>
+            <param name="sortExpressions">sort</param>
+            <returns>id asc,name desc</returns>
+        </member>
+        <member name="M:Api213.V2.Dal.Extension.ExtensionClass.To_Corefields(System.String,System.Type)">
+            <summary>
+            id,subject,customer_name,updated_at
+            to
+            "new(Id,Subject,Customer_name,Updated_at)"
+            </summary>
+            <param name="limitingFields"></param>
+            <param name="objectType"></param>
+            <returns></returns> 
+        </member>
+        <member name="M:Api213.V2.Dal.Extension.ExtensionClass.GetPropertyFrom(System.String,System.Type)">
+            <summary>
+            
+            </summary>
+            <param name="item"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Api213.V2.Dal.GenericRepository`1">
+            <summary>
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+        </member>
+        <member name="M:Api213.V2.Dal.GenericRepository`1.#ctor(Microsoft.EntityFrameworkCore.DbContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Api213.V2.Dal.GenericRepository`1.Get(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Func{System.Linq.IQueryable{`0},System.Linq.IOrderedQueryable{`0}},System.String)">
+            <summary>
+            </summary>
+            <param name="filter"></param>
+            <param name="orderBy"></param>
+            <param name="includeProperties"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Dal.GenericRepository`1.GetByID(System.Object)">
+            <summary>
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Dal.GenericRepository`1.Insert(`0)">
+            <summary>
+            </summary>
+            <param name="entity"></param>
+        </member>
+        <member name="M:Api213.V2.Dal.GenericRepository`1.Delete(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:Api213.V2.Dal.GenericRepository`1.Delete(`0)">
+            <summary>
+            </summary>
+            <param name="entityToDelete"></param>
+        </member>
+        <member name="M:Api213.V2.Dal.GenericRepository`1.Update(`0)">
+            <summary>
+            </summary>
+            <param name="entityToUpdate"></param>
+        </member>
+        <member name="M:Api213.V2.Dal.GenericRepository`1.Save">
+            <inheritdoc />
+            <summary>
+            </summary>
+        </member>
+        <member name="M:Api213.V2.Dal.GenericRepository`1.Dispose">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:Api213.V2.Dal.GenericRepository`1.Get(Api213.V2.Helper.FilteringSortingParams)">
+            <summary>
+            </summary>
+            <param name="filteringSortingParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Dal.GenericRepository`1.SortAndFieldsAndFilterList(System.Linq.IQueryable{`0},Api213.V2.Helper.FilteringSortingParams)">
+            <summary>
+            </summary>
+            <param name="asQueryable"></param>
+            <param name="filteringSortingParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Dal.GenericRepository`1.Dispose(System.Boolean)">
+            <summary>
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:Api213.V2.Dal.GenericRepository`1.PagingQuery(Api213.V2.Helper.FilteringSortingParams,System.Linq.IQueryable{System.Object})">
+            <summary>
+            </summary>
+            <param name="filteringSortingParams"></param>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Dal.GenericRepository`1.PagingQuery(Api213.V2.Helper.FilteringSortingParams,System.Linq.IQueryable{System.Object},Api213.V2.Helper.PagedList{System.Object}@)">
+            <summary>
+            </summary>
+            <param name="filteringSortingParams"></param>
+            <param name="query"></param>
+            <param name="pagedList"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Api213.V2.Dal.IGenericRepository`1">
+            <inheritdoc />
+            <summary>
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+        </member>
+        <member name="M:Api213.V2.Dal.IGenericRepository`1.Get(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Func{System.Linq.IQueryable{`0},System.Linq.IOrderedQueryable{`0}},System.String)">
+            <summary>
+            
+            </summary>
+            <param name="filter"></param>
+            <param name="orderBy"></param>
+            <param name="includeProperties"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Dal.IGenericRepository`1.GetByID(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Dal.IGenericRepository`1.Insert(`0)">
+            <summary>
+            
+            </summary>
+            <param name="entity"></param>
+        </member>
+        <member name="M:Api213.V2.Dal.IGenericRepository`1.Delete(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:Api213.V2.Dal.IGenericRepository`1.Delete(`0)">
+            <summary>
+            
+            </summary>
+            <param name="entityToDelete"></param>
+        </member>
+        <member name="M:Api213.V2.Dal.IGenericRepository`1.Update(`0)">
+            <summary>
+            
+            </summary>
+            <param name="entityToUpdate"></param>
+        </member>
+        <member name="M:Api213.V2.Dal.IGenericRepository`1.Save">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api213.V2.Dal.IGenericRepository`1.Get(Api213.V2.Helper.FilteringSortingParams)">
+            <summary>
+            
+            </summary>
+            <param name="filteringSortingParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Dal.IGenericRepository`1.SortAndFieldsAndFilterList(System.Linq.IQueryable{`0},Api213.V2.Helper.FilteringSortingParams)">
+            <summary>
+            
+            </summary>
+            <param name="asQueryable"></param>
+            <param name="filteringSortingParams"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Api213.V2.Dto.PetDto">
+            <summary>
+            PetOutPut 
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Dto.PetDto.Id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Dto.PetDto.Name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Dto.PetDto.Description">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Api213.V2.Exception.ApiException">
+            <inheritdoc />
+            <summary>
+            </summary>
+        </member>
+        <member name="M:Api213.V2.Exception.ApiException.#ctor">
+            <inheritdoc />
+            <summary>
+            Initializes a new instance of the <see cref="T:Api213.V2.Exception.ApiException"/> class.
+            
+            </summary>
+        </member>
+        <member name="M:Api213.V2.Exception.ApiException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Api213.V2.Exception.ApiException"/> class.
+            
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Api213.V2.Exception.ApiException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Api213.V2.Exception.ApiException"/> class.
+            
+            </summary>
+            <param name="message"></param>
+            <param name="innerException"></param>
+        </member>
+        <member name="M:Api213.V2.Exception.ApiException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Api213.V2.Exception.ApiException"/> class.
+            
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="T:Api213.V2.Exception.NotFoundException">
+            <inheritdoc />
+            <summary>
+            </summary>
+        </member>
+        <member name="M:Api213.V2.Exception.NotFoundException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Api213.V2.Exception.NotFoundException"/> class.
+            
+            </summary>
+        </member>
+        <member name="M:Api213.V2.Exception.NotFoundException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Api213.V2.Exception.NotFoundException"/> class.
+            
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="T:Api213.V2.Exception.PetNotFoundException">
+            <inheritdoc />
+            <summary>
+            PetNotFoundException
+            </summary>
+        </member>
+        <member name="M:Api213.V2.Exception.PetNotFoundException.#ctor(Api213.V2.Models.PetEntity)">
+            <inheritdoc />
+            <summary>
+            Initializes a new instance of the <see cref="T:Api213.V2.Exception.PetNotFoundException"/> class.
+            
+            </summary>
+            <param name="aPet"></param>
+        </member>
+        <member name="M:Api213.V2.Exception.PetNotFoundException.#ctor(System.String)">
+            <inheritdoc />
+            <summary>
+            Initializes a new instance of the <see cref="T:Api213.V2.Exception.PetNotFoundException"/> class.
+            
+            </summary>
+            <param name="petName"></param>
+        </member>
+        <member name="T:Api213.V2.Helper.FilteringSortingParams">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.FilteringSortingParams.Sort">
+            <summary>
+            Gets or sets sort use: +property,-property
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.FilteringSortingParams.Fields">
+            <summary>
+            Filter: propertyname,propertyname,propertyname
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.FilteringSortingParams.Page">
+            <summary>
+            PageNumber
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.FilteringSortingParams.Count">
+            <summary>
+            PageSize
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.FilteringSortingParams.PagingParams">
+            <summary>
+            PagingParams
+            </summary>
+        </member>
+        <member name="T:Api213.V2.Helper.LinkInfo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.LinkInfo.Href">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.LinkInfo.Rel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.LinkInfo.Method">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Api213.V2.Helper.PagedList`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Api213.V2.Helper.PagedList`1.#ctor(System.Linq.IQueryable{`0},System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Api213.V2.Helper.PagedList`1"/> class.
+            
+            </summary>
+            <param name="source"></param>
+            <param name="pageNumber"></param>
+            <param name="pageSize"></param>
+        </member>
+        <member name="P:Api213.V2.Helper.PagedList`1.TotalItems">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.PagedList`1.PageNumber">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.PagedList`1.PageSize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.PagedList`1.List">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.PagedList`1.TotalPages">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.PagedList`1.HasPreviousPage">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.PagedList`1.HasNextPage">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.PagedList`1.NextPageNumber">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.PagedList`1.PreviousPageNumber">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api213.V2.Helper.PagedList`1.GetHeader">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api213.V2.Helper.PagingHeader">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api213.V2.Helper.PagingHeader.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Api213.V2.Helper.PagingHeader"/> class.
+            PagingHeader
+            </summary>
+            <param name="totalItems"></param>
+            <param name="pageNumber"></param>
+            <param name="pageSize"></param>
+            <param name="totalPages"></param>
+        </member>
+        <member name="P:Api213.V2.Helper.PagingHeader.TotalItems">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.PagingHeader.PageNumber">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.PagingHeader.PageSize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.PagingHeader.TotalPages">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api213.V2.Helper.PagingHeader.ToJson">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api213.V2.Helper.PagingParams">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.PagingParams.PageNumber">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Helper.PagingParams.PageSize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Api213.V2.Interface.IPetsManager">
+            <summary>
+            IPetsManager
+            </summary>
+        </member>
+        <member name="M:Api213.V2.Interface.IPetsManager.ReadOne(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Interface.IPetsManager.Create(Api213.V2.Models.PetEntity)">
+            <summary>
+            
+            </summary>
+            <param name="pet"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Interface.IPetsManager.Replace(Api213.V2.Models.PetEntity)">
+            <summary>
+            repalce entity
+            </summary>
+            <param name="pet"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Interface.IPetsManager.Update(Api213.V2.Models.PetEntity)">
+            <summary>
+            update any field
+            </summary>
+            <param name="pet"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Interface.IPetsManager.Delete(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Interface.IPetsManager.Get(Api213.V2.Helper.FilteringSortingParams)">
+            <summary>
+            
+            </summary>
+            <param name="filteringSortingParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Interface.IPetsManager.GetByNameSubstring(System.String,Api213.V2.Helper.FilteringSortingParams)">
+            <summary>
+            
+            </summary>
+            <param name="namelike"></param>
+            <param name="filteringSortingParams"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Api213.V2.Manager.PetsManager">
+            <inheritdoc />
+            <summary>
+            </summary>
+        </member>
+        <member name="M:Api213.V2.Manager.PetsManager.#ctor(Api213.V2.Dal.IGenericRepository{Api213.V2.Models.PetEntity})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Api213.V2.Manager.PetsManager"/> class.
+            
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Api213.V2.Manager.PetsManager.ReadAll">
+            <summary>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Manager.PetsManager.ReadOne(System.String)">
+            <inheritdoc />
+            <summary>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Manager.PetsManager.Create(Api213.V2.Models.PetEntity)">
+            <summary>
+            </summary>
+            <param name="pet"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Manager.PetsManager.Replace(Api213.V2.Models.PetEntity)">
+            <inheritdoc />
+            <summary>
+            </summary>
+            <param name="pet"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Manager.PetsManager.Update(Api213.V2.Models.PetEntity)">
+            <inheritdoc />
+        </member>
+        <member name="M:Api213.V2.Manager.PetsManager.Delete(System.String)">
+            <inheritdoc />
+            <summary>
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Manager.PetsManager.Get(Api213.V2.Helper.FilteringSortingParams)">
+            <summary>
+            
+            </summary>
+            <param name="filteringSortingParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Manager.PetsManager.GetByNameSubstring(System.String,Api213.V2.Helper.FilteringSortingParams)">
+            <summary>
+            </summary>
+            <param name="namelike"></param>
+            <param name="filteringSortingParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Manager.PetsManager.GetByNameSubstring(System.String)">
+            <summary>
+            </summary>
+            <param name="namelike"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Api213.V2.Manager.PetsManager.IsExists(System.String)">
+            <summary>
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Api213.V2.Models.PetEntity">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Models.PetEntity.Id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Models.PetEntity.Name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api213.V2.Models.PetEntity.Description">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>
