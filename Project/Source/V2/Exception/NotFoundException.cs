@@ -5,9 +5,9 @@
     /// </summary>
     public class NotFoundException : ApiException
     {
+        /// <inheritdoc />
         /// <summary>
         /// Initializes a new instance of the <see cref="NotFoundException"/> class.
-        /// 
         /// </summary>
         public NotFoundException()
         {

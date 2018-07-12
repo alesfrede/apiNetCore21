@@ -10,7 +10,6 @@ using Api213.V2.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace Api213.V2.Controllers
 {
@@ -26,11 +25,13 @@ namespace Api213.V2.Controllers
     public class PetsController : ControllerBase, IPetsController
     {
         private readonly IPetsManager _manager;
+        private readonly InvalidResponseFactory _invalidResponseFactory;
 
         /// <inheritdoc />
         public PetsController(IPetsManager manager)
         {
             _manager = manager ?? throw new ArgumentNullException(nameof(manager));
+            _invalidResponseFactory = new InvalidResponseFactory(this);
         }
 
         /// <inheritdoc />
@@ -69,7 +70,7 @@ namespace Api213.V2.Controllers
             }
             catch (NotFoundException ex)
             {
-                return InvalidResponseFactory(NotFound(ex.Message));
+                return _invalidResponseFactory.Response(NotFound(ex.Message));
             }
         }
 
@@ -95,7 +96,7 @@ namespace Api213.V2.Controllers
             }
             catch (System.Exception e)
             {
-                return InvalidResponseFactory(StatusCode(StatusCodes.Status405MethodNotAllowed, e.Message));
+                return _invalidResponseFactory.Response(StatusCode(StatusCodes.Status405MethodNotAllowed, e.Message));
             }
         }
 
@@ -123,7 +124,7 @@ namespace Api213.V2.Controllers
             }
             catch (NotFoundException ex)
             {
-                return InvalidResponseFactory(NotFound(ex.Message));
+                return _invalidResponseFactory.Response(NotFound(ex.Message));
             }
         }
 
@@ -147,7 +148,7 @@ namespace Api213.V2.Controllers
             }
             catch (NotFoundException ex)
             {
-                return InvalidResponseFactory(NotFound(ex.Message));
+                return _invalidResponseFactory.Response(NotFound(ex.Message));
             }
         }
 
@@ -168,11 +169,12 @@ namespace Api213.V2.Controllers
             [FromQuery] FilteringSortingParams filteringSortingParams)
         {
             var pets = _manager.GetByNameSubstring(namelike, filteringSortingParams);
-            if (!pets.Any()) return InvalidResponseFactory(NotFound(namelike));
+            if (!pets.Any()) return _invalidResponseFactory.Response(NotFound(namelike));
 
             return Ok(pets);
         }
 
+        /// <inheritdoc />
         /// <summary>
         ///     JsonPatch to Apply the changes for  properties .
         ///     {"op" : "replace",
@@ -196,7 +198,7 @@ namespace Api213.V2.Controllers
                 var pet = _manager.ReadOne(petName).Result;
                 patch.ApplyTo(pet, ModelState);
                 if (!ModelState.IsValid)
-                    return InvalidResponseFactory(StatusCodes.Status400BadRequest, "JsonPatchDocument.ApplyTo");
+                    return _invalidResponseFactory.Response(StatusCodes.Status400BadRequest, "JsonPatchDocument.ApplyTo");
 
                 await _manager.Update(pet);
 
@@ -204,53 +206,12 @@ namespace Api213.V2.Controllers
             }
             catch (NotFoundException ex)
             {
-                return InvalidResponseFactory(NotFound(ex.Message));
+                return _invalidResponseFactory.Response(NotFound(ex.Message));
             }
             catch (System.Exception e)
             {
-                return InvalidResponseFactory(StatusCode(StatusCodes.Status405MethodNotAllowed, e.Message));
+                return _invalidResponseFactory.Response(StatusCode(StatusCodes.Status405MethodNotAllowed, e.Message));
             }
-        }
-
-        /// <summary>
-        /// InvalidResponseFactory for ObjectResult
-        /// </summary>
-        /// <param name="objectResult"></param>
-        /// <returns></returns>
-        private IActionResult InvalidResponseFactory(ObjectResult objectResult)
-        {
-            return InvalidResponseFactory(objectResult.StatusCode, objectResult.Value.ToString());
-        }
-
-        /// <summary>
-        /// Errors : InvalidResponseFactory
-        /// </summary>
-        /// <param name="code"></param>
-        /// <param name="extraMessage"></param>
-        /// <returns></returns>
-        private IActionResult InvalidResponseFactory(int? code, string extraMessage)
-        {
-            var codehttp = code ?? 500;
-
-            ModelState.AddModelError("ExtraMessage", extraMessage);
-            var problemDetails = new ValidationProblemDetails(ModelState)
-            {
-                Instance = HttpContext.Request.Path,
-                Status = code,
-                Type = "https://asp.net/core",
-                Detail = "HttpContext:" + HttpContext.Request.Method + " " + HttpContext.Request.Path + ", " + (char)13 +
-                         "ExtraMessage: " + extraMessage + (char)13 +
-                         ", Please refer to the errors property for additional details."
-            };
-            if (code == null || (code > 511 || code < 100))
-            {
-                codehttp = 500;
-            }
-
-            var type = new MediaTypeCollection { "application/problem+json" };
-            var objectResult = StatusCode(codehttp, problemDetails);
-            objectResult.ContentTypes = type;
-            return objectResult;
         }
 
         /// <summary>
@@ -268,7 +229,7 @@ namespace Api213.V2.Controllers
         /// </summary>
         /// <param name="aPet"></param>
         /// <returns></returns>
-        private PetEntity Map(PetDto aPet)
+        private static PetEntity Map(PetDto aPet)
         {
             return new PetEntity {Id = aPet.Id, Description = aPet.Description, Name = aPet.Name};
         }
