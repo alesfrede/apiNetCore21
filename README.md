@@ -16,7 +16,7 @@ api NetCore 2.1 Best practices - approach - DotNetCore 2.1.x - Version - Swagger
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.8.11" />
  
  
-
+   
  
     <PackageReference Include="EfCore.TestSupport" Version="1.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0" />
