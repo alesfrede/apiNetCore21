@@ -6,3 +6,6 @@
 /.vs/Api213/v15/.suo
 /Project/Source/obj
 /Project/Source/.vs/Api213/v15
+/Project/ApiXUnitTestProject/obj
+/Project/Source/bin/Debug/netcoreapp2.1
+/Project/ApiXUnitTestProject/bin/Debug/netcoreapp2.1
