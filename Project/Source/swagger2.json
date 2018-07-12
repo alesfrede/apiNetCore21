@@ -1,0 +1,318 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "version": "2.0",
+    "title": " API 2.0",
+    "description": "A sample application   API versioning.",
+    "termsOfService": "Private",
+    "contact": {
+      "name": "Supervielle SA",
+      "email": "xxxx@somewhere.com"
+    }
+  },
+  "paths": {
+    "/api/v2/Pets": {
+      "get": {
+        "tags": [ "Pets" ],
+        "summary": "Read All",
+        "operationId": "ApiV2PetsGet",
+        "consumes": [],
+        "produces": [ "application/json" ],
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort use: +property,-property",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "description": "Filter: propertyname,propertyname,propertyname",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "PageNumber",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "PageSize",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully retrieved.",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": { "$ref": "#/definitions/Api213.V2.Models.PetOutPut" }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [ "Pets" ],
+        "summary": "Replace Objet",
+        "operationId": "ApiV2PetsPut",
+        "consumes": [ "application/json" ],
+        "produces": [ "application/json" ],
+        "parameters": [
+          {
+            "name": "aPet",
+            "in": "body",
+            "description": "",
+            "required": false,
+            "schema": { "$ref": "#/definitions/Api213.V2.Models.PetInput" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully retrieved.",
+            "schema": { "$ref": "#/definitions/Api213.V2.Models.PetOutPut" }
+          },
+          "400": { "description": "BadRequest" },
+          "404": { "description": "NotFound" }
+        }
+      },
+      "post": {
+        "tags": [ "Pets" ],
+        "summary": "Create new object",
+        "operationId": "ApiV2PetsPost",
+        "consumes": [ "application/json" ],
+        "produces": [ "application/json" ],
+        "parameters": [
+          {
+            "name": "aPet",
+            "in": "body",
+            "description": "",
+            "required": false,
+            "schema": { "$ref": "#/definitions/Api213.V2.Models.PetInput" }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successfully Created.",
+            "schema": { "$ref": "#/definitions/Api213.V2.Models.PetOutPut" }
+          },
+          "400": { "description": "BadRequest." },
+          "405": { "description": "Unable to create." }
+        }
+      }
+    },
+    "/api/v2/Pets/{petName}": {
+      "get": {
+        "tags": [ "Pets" ],
+        "summary": "Get by Name",
+        "operationId": "ApiV2PetsByPetNameGet",
+        "consumes": [],
+        "produces": [ "application/json" ],
+        "parameters": [
+          {
+            "name": "petName",
+            "in": "path",
+            "description": "name",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully retrieved.",
+            "schema": { "$ref": "#/definitions/Api213.V2.Models.PetOutPut" }
+          },
+          "404": { "description": "NotFound." },
+          "400": {
+            "description": "is invalid.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [ "Pets" ],
+        "summary": "Delete one",
+        "operationId": "ApiV2PetsByPetNameDelete",
+        "consumes": [],
+        "produces": [ "application/json" ],
+        "parameters": [
+          {
+            "name": "petName",
+            "in": "path",
+            "description": "Name of pet",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully retrieved.",
+            "schema": { "$ref": "#/definitions/Api213.V2.Models.PetOutPut" }
+          },
+          "404": { "description": "NotFound" }
+        }
+      },
+      "patch": {
+        "tags": [ "Pets" ],
+        "summary": "JsonPatch to Apply the changes for  properties . \r\n\t{\"op\" : \"replace\", \r\n    \"path\" : \"property\", \r\n    \"value\" : \"newvalue\"}",
+        "operationId": "ApiV2PetsByPetNamePatch",
+        "consumes": [ "application/json" ],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "petName",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "patch",
+            "in": "body",
+            "description": "JsonPatchDocument",
+            "required": false,
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": { "$ref": "#/definitions/Microsoft.AspNetCore.JsonPatch.Operations.Operation" }
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "operation successfully." },
+          "400": { "description": "BadRequest" },
+          "404": { "description": "NotFound" },
+          "405": { "description": "Unable to update." }
+        }
+      }
+    },
+    "/api/v2/Pets/Search": {
+      "get": {
+        "tags": [ "Pets" ],
+        "summary": "Search",
+        "operationId": "ApiV2PetsSearchGet",
+        "consumes": [],
+        "produces": [ "application/json" ],
+        "parameters": [
+          {
+            "name": "namelike",
+            "in": "query",
+            "description": "by name like",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort use: +property,-property",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "description": "Filter: propertyname,propertyname,propertyname",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "PageNumber",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "PageSize",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully retrieved.",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": { "$ref": "#/definitions/Api213.V2.Models.PetOutPut" }
+            }
+          },
+          "404": { "description": "NotFound" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Api213.V2.Models.PetOutPut": {
+      "description": "PetOutPut",
+      "required": [ "name" ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int32",
+          "description": "",
+          "type": "integer"
+        },
+        "name": {
+          "description": "",
+          "type": "string"
+        },
+        "description": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "Api213.V2.Models.PetInput": {
+      "description": "",
+      "required": [ "name" ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int32",
+          "description": "",
+          "type": "integer"
+        },
+        "name": {
+          "description": "",
+          "type": "string"
+        },
+        "description": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "Microsoft.AspNetCore.JsonPatch.Operations.Operation": {
+      "type": "object",
+      "properties": {
+        "value": { "type": "object" },
+        "path": { "type": "string" },
+        "op": { "type": "string" },
+        "from": { "type": "string" }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Pets",
+      "description": "Pets Controller"
+    }
+  ]
+}
