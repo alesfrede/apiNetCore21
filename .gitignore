@@ -9,3 +9,7 @@
 /Project/ApiXUnitTestProject/obj
 /Project/Source/bin/Debug/netcoreapp2.1
 /Project/ApiXUnitTestProject/bin/Debug/netcoreapp2.1
+/.vs
+/Api213.sln.DotSettings.user
+/Project/Source/Api213.csproj.user
+/Project/Source/.vs/Api213/DesignTimeBuild

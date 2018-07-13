@@ -64,7 +64,7 @@ namespace Api213
                 Title = $" API {description.ApiVersion}",
                 Version = description.ApiVersion.ToString(),
                 Description = "A sample application   API versioning.",
-                Contact = new Contact { Name = "Supervielle SA", Email = "xxxx@somewhere.com" },
+                Contact = new Contact { Name = " SA", Email = "xxxx@somewhere.com" },
                 TermsOfService = "Private"
 
                 // License = new License() { Name = "MIT", Url = "https://opensource.org/licenses/MIT" }

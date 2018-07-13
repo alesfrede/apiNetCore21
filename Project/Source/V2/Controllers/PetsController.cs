@@ -19,7 +19,7 @@ namespace Api213.V2.Controllers
     /// </summary>
     [ApiVersion("2.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
-    [Produces("application/json")]
+    [Produces("application/json", "application/problem+json")]
     [Consumes("application/json")]
     [ApiController]
     public class PetsController : ControllerBase, IPetsController
@@ -44,7 +44,7 @@ namespace Api213.V2.Controllers
         /// <response code="400">BadRequest parameters</response>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<PetFullDto>), 200)]
-        [ProducesResponseType(typeof(IDictionary<string, string>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ReadAllAsync([FromQuery] FilteringSortingParams filteringSortingParams)
         {
             try
@@ -68,8 +68,8 @@ namespace Api213.V2.Controllers
         /// <response code="404">NotFound.</response>
         [HttpGet("{petName}")]
         [ProducesResponseType(typeof(PetDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(IDictionary<string, string>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ReadOneAsync([FromRoute] string petName)
         {
             try
@@ -94,8 +94,8 @@ namespace Api213.V2.Controllers
         /// <response code="400">BadRequest.</response>
         [HttpPost]
         [ProducesResponseType(typeof(PetDto), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status405MethodNotAllowed)]
         public async Task<IActionResult> CreateAsync([FromBody] PetDto aPet)
         {
             try
@@ -120,13 +120,13 @@ namespace Api213.V2.Controllers
         /// <response code="404">NotFound</response>
         [HttpPut]
         [ProducesResponseType(typeof(PetDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAsync([FromBody] PetDto aPet)
         {
             try
             {
-                if (!ModelState.IsValid) return BadRequest(ModelState);
+                if (!ModelState.IsValid) return _invalidResponseFactory.Response(BadRequest(ModelState));
 
                 var updatedPet = await _manager.Replace(Map(aPet));
                 return Ok(ToView(updatedPet));
@@ -147,7 +147,7 @@ namespace Api213.V2.Controllers
         /// <response code="404">NotFound</response>
         [HttpDelete("{petName}")]
         [ProducesResponseType(typeof(PetDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAsync([FromRoute] string petName)
         {
             try
@@ -173,8 +173,8 @@ namespace Api213.V2.Controllers
         /// <response code="400">Status400 BadRequest</response>
         [HttpGet("Search")]
         [ProducesResponseType(typeof(IEnumerable<PetDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(IDictionary<string, string>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status400BadRequest)]
         public IActionResult Search(
             [FromQuery] string namelike,
             [FromQuery] FilteringSortingParams filteringSortingParams)
@@ -182,13 +182,14 @@ namespace Api213.V2.Controllers
             try
             {
                 var pets = _manager.GetByNameSubstring(namelike, filteringSortingParams);
-                if (!pets.Any()) return _invalidResponseFactory.Response(NotFound(namelike));
+                if (!pets.Any())
+                    return _invalidResponseFactory.Response(NotFound(namelike));
 
                 return Ok(pets);
             }
             catch (System.Exception ex)
             {
-                return _invalidResponseFactory.Response(new BadRequestObjectResult(ex.Message));
+                return _invalidResponseFactory.Response(new BadRequestObjectResult(ex));
             }
         }
 
@@ -208,6 +209,10 @@ namespace Api213.V2.Controllers
         /// <response code="405">Unable to update.</response>
         [HttpPatch("{petName}", Name = "UpdateOne")]
         [Consumes("application/json-patch+json", "application/json")]
+        [ProducesResponseType(typeof(IEnumerable<PetDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status405MethodNotAllowed)]
         public async Task<IActionResult> Patch([FromRoute] string petName,
             [FromBody] JsonPatchDocument<PetEntity> patch)
         {
@@ -216,7 +221,7 @@ namespace Api213.V2.Controllers
                 var pet = _manager.ReadOne(petName).Result;
                 patch.ApplyTo(pet, ModelState);
                 if (!ModelState.IsValid)
-                    return _invalidResponseFactory.Response(StatusCodes.Status400BadRequest, "JsonPatchDocument.ApplyTo");
+                    return _invalidResponseFactory.Response(StatusCodes.Status400BadRequest, "JsonPatchDocument");
 
                 await _manager.Update(pet);
 
@@ -239,7 +244,7 @@ namespace Api213.V2.Controllers
         /// <returns></returns>
         private static PetDto ToView(PetEntity pet)
         {
-            return new PetDto {Id = pet.Id, Description = pet.Description, Name = pet.Name};
+            return new PetDto {Id = pet.Id, Description = pet.Description, Name = pet.Name };
         }
 
         /// <summary>

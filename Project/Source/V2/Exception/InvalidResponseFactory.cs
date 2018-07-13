@@ -8,6 +8,8 @@ namespace Api213.V2.Exception
     /// </summary>
     public class InvalidResponseFactory
     {
+        private const int GenericError = 500;
+
         private readonly ControllerBase _controller;
 
         /// <summary>
@@ -38,22 +40,21 @@ namespace Api213.V2.Exception
         /// <returns></returns>
         public IActionResult Response(int? code, string extraMessage)
         {
-            var codehttp = code ?? 500;
+            var codehttp = GenericError;
+            if (code != null && code < 512 && code >= 100)
+                codehttp = (int)code;
 
             _controller.ModelState.AddModelError("ExtraMessage", extraMessage);
-            var problemDetails = new ValidationProblemDetails(_controller.ModelState)
+            var problemDetails = new ErrorDetails(_controller.ModelState)
             {
                 Instance = _controller.HttpContext.Request.Path,
                 Status = code,
                 Type = "https://asp.net/core",
-                Detail = "HttpContext:" + _controller.HttpContext.Request.Method + " " + _controller.HttpContext.Request.Path + ", " + (char)13 +
-                         "ExtraMessage: " + extraMessage + (char)13 +
-                         ", Please refer to the errors property for additional details."
+                Detail = "ExtraMessage: " + extraMessage + (char)13 +
+                         ", Please refer to the errors property for additional details.",
+                HttpMethod = _controller.HttpContext.Request.Method,
+                HttpStatusCode = codehttp
             };
-            if (code == null || (code > 511 || code < 100))
-            {
-                codehttp = 500;
-            }
 
             var type = new MediaTypeCollection { "application/problem+json" };
             var objectResult = _controller.StatusCode(codehttp, problemDetails);

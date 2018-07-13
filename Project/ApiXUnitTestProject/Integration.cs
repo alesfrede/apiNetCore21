@@ -66,6 +66,8 @@ namespace ApiXUnitTestProject
 
         [Theory]
         [InlineData("/api/v2/pets?sort=-id%2C-name&fields=name%2Cid&page=1&count=10")]
+        [InlineData("/api/v2/pets?IncludeProperties=Owner&sort=-id%2C-name&fields=name%2Cid&page=1&count=10")]
+        [InlineData("/api/v2/pets?IncludeProperties=Owner")]
         public async Task GetSortedandPagedSuccess(string url)
         {
             //_client = _factory.CreateClient(); 
@@ -108,6 +110,7 @@ namespace ApiXUnitTestProject
 
         [Theory]
         [InlineData("/api/v2/pets/Search?namelike=")]
+        [InlineData("/api/v2/pets/Search?IncludeProperties=Owner&namelike=")]
         public async Task SearchSuccess(string url)
         {
             // Arrange
@@ -121,6 +124,26 @@ namespace ApiXUnitTestProject
             response.EnsureSuccessStatusCode();
             var ideareturnDto = JsonConvert.DeserializeObject<IEnumerable<PetTestDto>>(await response.Content.ReadAsStringAsync());
             Assert.Equal(newIdea.Name, ideareturnDto.First().Name);
+        }
+
+        [Theory]
+        [InlineData("/api/v2/pets/Search?namelike=Bebe&includeProperties=Owner")]
+        public async Task SearchAndIncludePropertiesSuccess(string url)
+        {
+            // Arrange
+
+            var newIdea = Utilities.GetTestEntitiesPet().First(e => e.Name == "Bebe");
+
+            // Act
+            var response = await _client.GetAsync(url);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            var strjson = await response.Content.ReadAsStringAsync();
+            var ideareturnDto = JsonConvert.DeserializeObject<IEnumerable<PetTestDto>>(strjson);
+            var petTestDtos = ideareturnDto as PetTestDto[] ?? ideareturnDto.ToArray();
+            Assert.Equal(newIdea.Name, petTestDtos.First().Name);
+            Assert.NotNull(petTestDtos.First().Owner);
         }
 
         [Theory]

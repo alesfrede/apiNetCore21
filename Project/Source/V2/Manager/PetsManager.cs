@@ -118,16 +118,19 @@ namespace Api213.V2.Manager
         /// <returns></returns>
         public IEnumerable<dynamic> GetByNameSubstring(string namelike, FilteringSortingParams filteringSortingParams)
         {
-            // TODO: includes
-            var listafilter = GetByNameSubstring(namelike);
-            return _context.SortAndFieldsAndFilterList(listafilter.AsQueryable(), filteringSortingParams);
+            var queryable = _context.Includes(filteringSortingParams.IncludeProperties);
+
+            if (namelike != null)
+                queryable = queryable.Where(x => x.Name.Contains(namelike));
+
+            return _context.SortAndFieldsAndFilterList(queryable, filteringSortingParams);
         }
         
         /// <summary>
         /// </summary>
         /// <param name="namelike"></param>
         /// <returns></returns>
-        public IEnumerable<PetEntity> GetByNameSubstring(string namelike)
+        public IQueryable<PetEntity> GetByNameSubstring(string namelike)
         {
             if (namelike == null)
                 namelike = string.Empty;

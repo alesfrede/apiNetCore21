@@ -3,10 +3,10 @@
   "info": {
     "version": "2.0",
     "title": " API 2.0",
-    "description": "A sample application   API versioning.",
+    "description": "A sample application   API NetCore 2.1.3",
     "termsOfService": "Private",
     "contact": {
-      "name": "Supervielle SA",
+      "name": "Ale SA",
       "email": "xxxx@somewhere.com"
     }
   },
@@ -17,12 +17,12 @@
         "summary": "Read All",
         "operationId": "ApiV2PetsGet",
         "consumes": [],
-        "produces": [ "application/json" ],
+        "produces": [ "application/json", "application/problem+json" ],
         "parameters": [
           {
             "name": "sort",
             "in": "query",
-            "description": "Sort use: +property,-property",
+            "description": "Gets or sets sort use: +property,-property",
             "required": false,
             "type": "string"
           },
@@ -48,6 +48,13 @@
             "required": false,
             "type": "integer",
             "format": "int32"
+          },
+          {
+            "name": "includeProperties",
+            "in": "query",
+            "description": "DependentEntityProperty,DependentEntityProperty",
+            "required": false,
+            "type": "string"
           }
         ],
         "responses": {
@@ -56,8 +63,12 @@
             "schema": {
               "uniqueItems": false,
               "type": "array",
-              "items": { "$ref": "#/definitions/Api213.V2.Models.PetOutPut" }
+              "items": { "$ref": "#/definitions/Api213.V2.Dto.PetFullDto" }
             }
+          },
+          "400": {
+            "description": "BadRequest parameters",
+            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
           }
         }
       },
@@ -66,23 +77,29 @@
         "summary": "Replace Objet",
         "operationId": "ApiV2PetsPut",
         "consumes": [ "application/json" ],
-        "produces": [ "application/json" ],
+        "produces": [ "application/json", "application/problem+json" ],
         "parameters": [
           {
             "name": "aPet",
             "in": "body",
             "description": "",
             "required": false,
-            "schema": { "$ref": "#/definitions/Api213.V2.Models.PetInput" }
+            "schema": { "$ref": "#/definitions/Api213.V2.Dto.PetDto" }
           }
         ],
         "responses": {
           "200": {
             "description": "successfully retrieved.",
-            "schema": { "$ref": "#/definitions/Api213.V2.Models.PetOutPut" }
+            "schema": { "$ref": "#/definitions/Api213.V2.Dto.PetDto" }
           },
-          "400": { "description": "BadRequest" },
-          "404": { "description": "NotFound" }
+          "400": {
+            "description": "BadRequest",
+            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+          },
+          "404": {
+            "description": "NotFound",
+            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+          }
         }
       },
       "post": {
@@ -90,23 +107,29 @@
         "summary": "Create new object",
         "operationId": "ApiV2PetsPost",
         "consumes": [ "application/json" ],
-        "produces": [ "application/json" ],
+        "produces": [ "application/json", "application/problem+json" ],
         "parameters": [
           {
             "name": "aPet",
             "in": "body",
             "description": "",
             "required": false,
-            "schema": { "$ref": "#/definitions/Api213.V2.Models.PetInput" }
+            "schema": { "$ref": "#/definitions/Api213.V2.Dto.PetDto" }
           }
         ],
         "responses": {
           "201": {
             "description": "successfully Created.",
-            "schema": { "$ref": "#/definitions/Api213.V2.Models.PetOutPut" }
+            "schema": { "$ref": "#/definitions/Api213.V2.Dto.PetDto" }
           },
-          "400": { "description": "BadRequest." },
-          "405": { "description": "Unable to create." }
+          "400": {
+            "description": "BadRequest.",
+            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+          },
+          "405": {
+            "description": "Unable to create.",
+            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+          }
         }
       }
     },
@@ -116,7 +139,7 @@
         "summary": "Get by Name",
         "operationId": "ApiV2PetsByPetNameGet",
         "consumes": [],
-        "produces": [ "application/json" ],
+        "produces": [ "application/json", "application/problem+json" ],
         "parameters": [
           {
             "name": "petName",
@@ -129,15 +152,15 @@
         "responses": {
           "200": {
             "description": "successfully retrieved.",
-            "schema": { "$ref": "#/definitions/Api213.V2.Models.PetOutPut" }
+            "schema": { "$ref": "#/definitions/Api213.V2.Dto.PetDto" }
           },
-          "404": { "description": "NotFound." },
+          "404": {
+            "description": "NotFound.",
+            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+          },
           "400": {
             "description": "is invalid.",
-            "schema": {
-              "type": "object",
-              "additionalProperties": { "type": "string" }
-            }
+            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
           }
         }
       },
@@ -146,7 +169,7 @@
         "summary": "Delete one",
         "operationId": "ApiV2PetsByPetNameDelete",
         "consumes": [],
-        "produces": [ "application/json" ],
+        "produces": [ "application/json", "application/problem+json" ],
         "parameters": [
           {
             "name": "petName",
@@ -159,17 +182,20 @@
         "responses": {
           "200": {
             "description": "successfully retrieved.",
-            "schema": { "$ref": "#/definitions/Api213.V2.Models.PetOutPut" }
+            "schema": { "$ref": "#/definitions/Api213.V2.Dto.PetDto" }
           },
-          "404": { "description": "NotFound" }
+          "404": {
+            "description": "NotFound",
+            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+          }
         }
       },
       "patch": {
         "tags": [ "Pets" ],
-        "summary": "JsonPatch to Apply the changes for  properties . \r\n\t{\"op\" : \"replace\", \r\n    \"path\" : \"property\", \r\n    \"value\" : \"newvalue\"}",
+        "summary": "JsonPatch to Apply the changes for  properties .\r\n{\"op\" : \"replace\",\r\n\"path\" : \"property\",\r\n\"value\" : \"newvalue\"}",
         "operationId": "ApiV2PetsByPetNamePatch",
-        "consumes": [ "application/json" ],
-        "produces": [],
+        "consumes": [ "application/json-patch+json", "application/json" ],
+        "produces": [ "application/json", "application/problem+json" ],
         "parameters": [
           {
             "name": "petName",
@@ -191,10 +217,26 @@
           }
         ],
         "responses": {
-          "200": { "description": "operation successfully." },
-          "400": { "description": "BadRequest" },
-          "404": { "description": "NotFound" },
-          "405": { "description": "Unable to update." }
+          "200": {
+            "description": "operation successfully.",
+            "schema": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": { "$ref": "#/definitions/Api213.V2.Dto.PetDto" }
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+          },
+          "400": {
+            "description": "BadRequest",
+            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+          },
+          "405": {
+            "description": "Unable to update.",
+            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+          }
         }
       }
     },
@@ -204,7 +246,7 @@
         "summary": "Search",
         "operationId": "ApiV2PetsSearchGet",
         "consumes": [],
-        "produces": [ "application/json" ],
+        "produces": [ "application/json", "application/problem+json" ],
         "parameters": [
           {
             "name": "namelike",
@@ -216,7 +258,7 @@
           {
             "name": "sort",
             "in": "query",
-            "description": "Sort use: +property,-property",
+            "description": "Gets or sets sort use: +property,-property",
             "required": false,
             "type": "string"
           },
@@ -242,6 +284,13 @@
             "required": false,
             "type": "integer",
             "format": "int32"
+          },
+          {
+            "name": "includeProperties",
+            "in": "query",
+            "description": "DependentEntityProperty,DependentEntityProperty",
+            "required": false,
+            "type": "string"
           }
         ],
         "responses": {
@@ -250,16 +299,23 @@
             "schema": {
               "uniqueItems": false,
               "type": "array",
-              "items": { "$ref": "#/definitions/Api213.V2.Models.PetOutPut" }
+              "items": { "$ref": "#/definitions/Api213.V2.Dto.PetDto" }
             }
           },
-          "404": { "description": "NotFound" }
+          "404": {
+            "description": "NotFound",
+            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+          },
+          "400": {
+            "description": "Status400 BadRequest",
+            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+          }
         }
       }
     }
   },
   "definitions": {
-    "Api213.V2.Models.PetOutPut": {
+    "Api213.V2.Dto.PetFullDto": {
       "description": "PetOutPut",
       "required": [ "name" ],
       "type": "object",
@@ -276,11 +332,76 @@
         "description": {
           "description": "",
           "type": "string"
+        },
+        "owner": {
+          "$ref": "#/definitions/Api213.V2.Dto.OwnerDto",
+          "description": ""
         }
       }
     },
-    "Api213.V2.Models.PetInput": {
+    "Api213.V2.Dto.OwnerDto": {
+      "description": "OwnerDto",
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int32",
+          "description": "",
+          "type": "integer"
+        },
+        "name": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "Api213.V2.Exception.IErrorDetails": {
       "description": "",
+      "type": "object",
+      "properties": {
+        "httpStatusCode": {
+          "format": "int32",
+          "description": "HttpStatusCode",
+          "type": "integer"
+        },
+        "httpMethod": {
+          "description": "HttpMethod",
+          "type": "string"
+        },
+        "errors": {
+          "description": "",
+          "type": "object",
+          "additionalProperties": {
+            "uniqueItems": false,
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "readOnly": true
+        },
+        "type": {
+          "description": "",
+          "type": "string"
+        },
+        "title": {
+          "description": "",
+          "type": "string"
+        },
+        "status": {
+          "format": "int32",
+          "description": "",
+          "type": "integer"
+        },
+        "detail": {
+          "description": "",
+          "type": "string"
+        },
+        "instance": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "Api213.V2.Dto.PetDto": {
+      "description": "PetOutPut",
       "required": [ "name" ],
       "type": "object",
       "properties": {

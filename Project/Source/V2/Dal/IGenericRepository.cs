@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Api213.V2.Helper;
@@ -20,7 +19,7 @@ namespace Api213.V2.Dal
         /// <param name="orderBy"></param>
         /// <param name="includeProperties"></param>
         /// <returns></returns>
-        IEnumerable<TEntity> Get(
+        IQueryable<TEntity> Get(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = "");
@@ -77,5 +76,12 @@ namespace Api213.V2.Dal
         IQueryable<dynamic> SortAndFieldsAndFilterList(
             IQueryable<TEntity> asQueryable,
             FilteringSortingParams filteringSortingParams);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="includeProperties"></param>
+        /// <returns></returns>
+        IQueryable<TEntity> Includes(string includeProperties);
     }
 }

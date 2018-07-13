@@ -28,3 +28,4 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3925:\"ISerializable\" should be implemented correctly", Justification = "<Pendiente>", Scope = "type", Target = "~T:Api213.V2.Exception.ApiException")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3925:\"ISerializable\" should be implemented correctly", Justification = "<Pendiente>", Scope = "type", Target = "~T:Api213.V2.Exception.NotFoundException")]
 
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3881:\"IDisposable\" should be implemented correctly", Justification = "<Pendiente>", Scope = "type", Target = "~T:Api213.V2.Dal.GenericRepository`1")]
