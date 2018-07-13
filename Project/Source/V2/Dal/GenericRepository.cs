@@ -7,10 +7,13 @@ using Api213.V2.Dal.Extension;
 using Api213.V2.Helper;
 using Api213.V2.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace Api213.V2.Dal
 {
+    /// <inheritdoc />
     /// <summary>
+    /// IGenericRepository
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     public class GenericRepository<TEntity> : IGenericRepository<TEntity>
@@ -27,6 +30,7 @@ namespace Api213.V2.Dal
             _dbSet = context.Set<TEntity>();
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="filter"></param>
@@ -114,14 +118,21 @@ namespace Api213.V2.Dal
             GC.SuppressFinalize(this);
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="filteringSortingParams"></param>
         /// <returns></returns>
         public IQueryable<dynamic> Get(FilteringSortingParams filteringSortingParams)
         {
-            var query = SortAndFieldsAndFilterList(_dbSet, filteringSortingParams);
+            var query1 = _dbSet.AsQueryable();
+            foreach (var includeProperty in filteringSortingParams.IncludeProperties.Split(
+                new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                query1 = _dbSet.Include(includeProperty);
+
+            var query = SortAndFieldsAndFilterList(query1, filteringSortingParams);
             query = PagingQuery(filteringSortingParams, query);
+            
             return query.AsQueryable();
         }
         

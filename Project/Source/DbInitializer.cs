@@ -15,7 +15,12 @@ namespace Api213
         /// <param name="context"></param>
         public static void Initialize(DataContext context)
         {
-           context.PetInputs.AddRange(GetTestEntities());
+            context.Owners.AddRange(GetTestEntities().Item2);
+            context.PetInputs.AddRange(GetTestEntities().Item1);
+            context.SaveChanges();
+            context.PetInputs.First(p => p.Id == 1).Owner = context.Owners.First(o => o.Id == 1);
+            context.PetInputs.First(p => p.Id == 2).Owner = context.Owners.First(o => o.Id == 2);
+            context.PetInputs.First(p => p.Id == 3).Owner = context.Owners.First(o => o.Id == 2);
             context.SaveChanges();
         }
 
@@ -23,14 +28,19 @@ namespace Api213
         /// GetTestEntities
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<PetEntity> GetTestEntities()
+        public static(IEnumerable<PetEntity>, IEnumerable<Owner>) GetTestEntities()
         {
-            return new[]
+            var owners = new[]
             {
-                new PetEntity { Id = 1, Name = "Iga", Description = "Iga" },
-                new PetEntity { Id = 2, Name = "Dogui", Description = "Dogui" },
-                new PetEntity { Id = 3, Name = "Bebe", Description = "Bebe" }
-            }.ToList();
+             new Owner {Id = 1, Name = "Juan"},
+             new Owner { Id = 2, Name = "Pedro" }
+            };
+            return (new[]
+            {
+                new PetEntity { Id = 1, Name = "Iga", Description = "Iga", Owner = null },
+                new PetEntity { Id = 2, Name = "Dogui", Description = "Dogui", Owner = null},
+                new PetEntity { Id = 3, Name = "Bebe", Description = "Bebe", Owner = null }
+            }, owners);
         }
     }
 }

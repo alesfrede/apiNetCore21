@@ -34,8 +34,13 @@
         }
 
         /// <summary>
+        /// DependentEntityProperty,DependentEntityProperty
+        /// </summary>
+        public string IncludeProperties { get; set; } = string.Empty;
+
+        /// <summary>
         /// PagingParams
         /// </summary>
-        private PagingParams PagingParams { get;  } = new PagingParams();
+        private PagingParams PagingParams { get; } = new PagingParams();
     }
 }

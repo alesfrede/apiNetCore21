@@ -70,7 +70,7 @@ namespace ApiXUnitTestProject
         {
             //_client = _factory.CreateClient(); 
 
-            var newIdeas = Utilities.GetTestEntities();
+            var newIdeas = Utilities.GetTestEntitiesPet();
             // Act 
             var response = await _client.GetAsync(url);
             // Assert 
@@ -90,7 +90,7 @@ namespace ApiXUnitTestProject
             // Arrange
             //  var newIdea = new PetInput { Id = 1, Name = "name", Description = "desc" };
             //  await _client.PostAsJsonAsync("/api/v2/pets", newIdea);
-            var newIdea = Utilities.GetTestEntities().First(e => e.Name == "Bebe");
+            var newIdea = Utilities.GetTestEntitiesPet().First(e => e.Name == "Bebe");
 
             // Act
             var response = await _client.GetAsync(url);
@@ -112,7 +112,7 @@ namespace ApiXUnitTestProject
         {
             // Arrange
  
-            var newIdea = Utilities.GetTestEntities().First(e => e.Name == "Bebe");
+            var newIdea = Utilities.GetTestEntitiesPet().First(e => e.Name == "Bebe");
 
             // Act
             var response = await _client.GetAsync(url+newIdea.Name);
@@ -225,7 +225,7 @@ namespace ApiXUnitTestProject
         [InlineData("/api/v2/pets/", "Dogui")]
         public async Task PatchOneSuccess(string url, string id)
         {
-            var newIdea = Utilities.GetTestEntities().First(e => e.Name == id);
+            var newIdea = Utilities.GetTestEntitiesPet().First(e => e.Name == id);
             var patch = new JArray(new JObject(
                 new JProperty("op", "replace"),
                 new JProperty("path", "description"),
@@ -247,7 +247,7 @@ namespace ApiXUnitTestProject
         [InlineData("/api/v2/pets/", "Bebe")]
         public async Task PatchOneFailJsonPatchPropertyname(string url, string id)
         {
-           // var newIdea = Utilities.GetTestEntities().First(e => e.Name == id);
+           // var newIdea = Utilities.GetTestEntitiesPet().First(e => e.Name == id);
             var patch = new JArray(new JObject(
                 new JProperty("op", "replace"),
                 new JProperty("path", "Propiedad1"),
@@ -267,7 +267,7 @@ namespace ApiXUnitTestProject
         [InlineData("/api/v2/pets/", "Bebe")]
         public async Task PatchOneFailJsonPatchFormat(string url, string id)
         {
-           // var newIdea = Utilities.GetTestEntities().First(e => e.Name == id);
+           // var newIdea = Utilities.GetTestEntitiesPet().First(e => e.Name == id);
             var patch = new JArray(new JObject(
                 new JProperty("op", ""),
                 new JProperty("path", "Propiedad1"),
@@ -287,7 +287,7 @@ namespace ApiXUnitTestProject
         [InlineData("/api/v2/pets/", "Bebe")]
         public async Task PatchOneFailJsonPatchPropertyError(string url, string id)
         {
-          //  var newIdea = Utilities.GetTestEntities().First(e => e.Name == id);
+          //  var newIdea = Utilities.GetTestEntitiesPet().First(e => e.Name == id);
             var patch = new JArray(new JObject(
                 new JProperty("op", "replace"),
                 new JProperty("path", "id"),

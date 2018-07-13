@@ -73,3 +73,5 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.LayoutRules", "SA1507:Code must not contain multiple blank lines in a row", Justification = "<Pendiente>")] //  = "member", Target = "~M:ApiXUnitTestProject.Integration.SearchSuccess(System.String)~System.Threading.Tasks.Task")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.LayoutRules", "SA1508:Closing braces must not be preceded by blank line", Justification = "<Pendiente>")] //  = "type", Target = "~T:ApiXUnitTestProject.Integration")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.LayoutRules", "SA1505:Opening braces must not be followed by blank line", Justification = "<Pendiente>")] //  = "type", Target = "~T:ApiXUnitTestProject.Integration")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S125:Sections of code should not be \"commented out\"", Justification = "<Pendiente>")]
+

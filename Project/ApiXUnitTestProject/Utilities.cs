@@ -16,7 +16,7 @@ namespace ApiXUnitTestProject
         /// <param name="db"></param>
         public static void InitializeDbForTests(DataContext db)
         {
-            var lista = GetTestEntities();
+            var lista = GetTestEntitiesPet();
             db.PetInputs.AddRange(lista);
             db.SaveChanges();
         }
@@ -25,9 +25,19 @@ namespace ApiXUnitTestProject
         /// 
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<PetEntity> GetTestEntities()
+        public static IEnumerable<PetEntity> GetTestEntitiesPet()
         {
-            return DbInitializer.GetTestEntities();
+            return DbInitializer.GetTestEntities().Item1;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<Owner> GetTestEntitiesOwner()
+        {
+            return DbInitializer.GetTestEntities().Item2;
         }
 
     }

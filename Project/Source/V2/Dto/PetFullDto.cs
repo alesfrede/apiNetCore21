@@ -1,11 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Api213.V2.Models
+﻿namespace Api213.V2.Dto
 {
     /// <summary>
-    /// 
+    /// PetOutPut 
     /// </summary>
-    public class PetEntity
+    public class PetFullDto
     {
         /// <summary>
         /// 
@@ -15,18 +13,17 @@ namespace Api213.V2.Models
         /// <summary>
         /// 
         /// </summary>
-        [Required]
+        [System.ComponentModel.DataAnnotations.Required]
         public string Name { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [MaxLength(50)]
         public string Description { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public Owner Owner { get; set; }
+        public OwnerDto Owner { get; set; }
     }
 }

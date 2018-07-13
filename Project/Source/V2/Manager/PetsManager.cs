@@ -110,6 +110,7 @@ namespace Api213.V2.Manager
             return Task.FromResult(item.AsQueryable().AsEnumerable());
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="namelike"></param>
@@ -117,6 +118,7 @@ namespace Api213.V2.Manager
         /// <returns></returns>
         public IEnumerable<dynamic> GetByNameSubstring(string namelike, FilteringSortingParams filteringSortingParams)
         {
+            // TODO: includes
             var listafilter = GetByNameSubstring(namelike);
             return _context.SortAndFieldsAndFilterList(listafilter.AsQueryable(), filteringSortingParams);
         }

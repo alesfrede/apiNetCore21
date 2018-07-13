@@ -41,11 +41,20 @@ namespace Api213.V2.Controllers
         /// <param name="filteringSortingParams">sort y custom fields</param>
         /// <returns></returns>
         /// <response code="200">successfully retrieved.</response>
+        /// <response code="400">BadRequest parameters</response>
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<PetDto>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<PetFullDto>), 200)]
+        [ProducesResponseType(typeof(IDictionary<string, string>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ReadAllAsync([FromQuery] FilteringSortingParams filteringSortingParams)
         {
-            return Ok(await _manager.Get(filteringSortingParams));
+            try
+            {
+                return Ok(await _manager.Get(filteringSortingParams));
+            }
+            catch (System.Exception ex)
+            {
+                return _invalidResponseFactory.Response(new BadRequestObjectResult(ex.Message));
+            }
         }
 
         /// <inheritdoc />
@@ -161,17 +170,26 @@ namespace Api213.V2.Controllers
         /// <returns>Pets</returns>
         /// <response code="200">successfully retrieved.</response>
         /// <response code="404">NotFound</response>
+        /// <response code="400">Status400 BadRequest</response>
         [HttpGet("Search")]
         [ProducesResponseType(typeof(IEnumerable<PetDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IDictionary<string, string>), StatusCodes.Status400BadRequest)]
         public IActionResult Search(
             [FromQuery] string namelike,
             [FromQuery] FilteringSortingParams filteringSortingParams)
         {
-            var pets = _manager.GetByNameSubstring(namelike, filteringSortingParams);
-            if (!pets.Any()) return _invalidResponseFactory.Response(NotFound(namelike));
+            try
+            {
+                var pets = _manager.GetByNameSubstring(namelike, filteringSortingParams);
+                if (!pets.Any()) return _invalidResponseFactory.Response(NotFound(namelike));
 
-            return Ok(pets);
+                return Ok(pets);
+            }
+            catch (System.Exception ex)
+            {
+                return _invalidResponseFactory.Response(new BadRequestObjectResult(ex.Message));
+            }
         }
 
         /// <inheritdoc />

@@ -21,5 +21,10 @@ namespace Api213.V2.Dal
         /// 
         /// </summary>
         public DbSet<PetEntity> PetInputs { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public DbSet<Owner> Owners { get; set; }
     }
 }
