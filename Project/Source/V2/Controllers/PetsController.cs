@@ -53,7 +53,7 @@ namespace Api213.V2.Controllers
             }
             catch (System.Exception ex)
             {
-                return _invalidResponseFactory.Response(new BadRequestObjectResult(ex.Message));
+                return _invalidResponseFactory.Response(new BadRequestObjectResult(ex), "Argumentos no válidos");
             }
         }
 
@@ -79,7 +79,7 @@ namespace Api213.V2.Controllers
             }
             catch (NotFoundException ex)
             {
-                return _invalidResponseFactory.Response(NotFound(ex.Message));
+                return _invalidResponseFactory.Response(NotFound(ex));
             }
         }
 
@@ -193,12 +193,10 @@ namespace Api213.V2.Controllers
             }
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc></inheritdoc>
         /// <summary>
-        ///     JsonPatch to Apply the changes for  properties .
-        ///     {"op" : "replace",
-        ///     "path" : "property",
-        ///     "value" : "newvalue"}
+        ///     JsonPatch to Apply the changes for  properties based rfc7386
+        ///     {"op" : "replace",     "path" : "property",     "value" : "newvalue"}
         /// </summary>
         /// <param name="petName">id</param>
         /// <param name="patch">JsonPatchDocument</param>
@@ -221,7 +219,7 @@ namespace Api213.V2.Controllers
                 var pet = _manager.ReadOne(petName).Result;
                 patch.ApplyTo(pet, ModelState);
                 if (!ModelState.IsValid)
-                    return _invalidResponseFactory.Response(StatusCodes.Status400BadRequest, "JsonPatchDocument");
+                    return _invalidResponseFactory.Response(StatusCodes.Status400BadRequest, "JsonPatchDocument", "Argumentos no válidos");
 
                 await _manager.Update(pet);
 

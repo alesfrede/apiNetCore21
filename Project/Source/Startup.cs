@@ -57,7 +57,8 @@ namespace Api213
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            
+
+            // services.AddMvc(options => {    options.Filters.Add(typeof(UnhandledExceptionFilterAttribute)); });
             services.AddDbContext<DataContext>(opt =>
                 opt.UseInMemoryDatabase("DataContextList"));
             services.AddScoped<DbContext, DataContext>(f => f.GetService<DataContext>());
@@ -78,8 +79,6 @@ namespace Api213
                 {
                     o.AssumeDefaultVersionWhenUnspecified = true;
                     o.DefaultApiVersion = new ApiVersion(2, 0);
-                    
-                    // o.ApiVersionReader = new HeaderApiVersionReader("api-version");
                     o.ReportApiVersions = true;
                 });
 
@@ -95,17 +94,6 @@ namespace Api213
             services.AddTransient(typeof(IGenericRepository<PetEntity>), typeof(GenericRepository<PetEntity>));
           
             services.AddTransient<IPetsManager, PetsManager>();
-
-#if DEBUG
-
-            // services.TryAddSingleton<IEnumerable<PetInput>>(new[]
-            // {
-            //    new PetInput {Id = 1, Name = "Iga", Description = "Iga"},
-            //    new PetInput {Id = 2, Name = "Dogui", Description = "Dogui"},
-            //    new PetInput {Id = 3, Name = "Bebe", Description = "Bebe"}
-            // });
-#endif
-
         }
 
         /// <summary>
@@ -119,17 +107,24 @@ namespace Api213
             ILoggerFactory loggerFactory,
             IApiVersionDescriptionProvider provider)
         {
+            // TODO: ExceptionHandler
+            
+            // app.UseMiddleware<ExceptionHandler>();
             if (HostingEnvironment.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+               // app.UseDeveloperExceptionPage();
                 Logger.LogWarning($@" IsDevelopment" + HostingEnvironment.ContentRootPath);
             }
             else
             {
-                app.UseHsts();
+              app.UseHsts();
             }
 
+#pragma warning disable S125 // Sections of code should not be "commented out"
+
             // app.UseHttpsRedirection();
+#pragma warning restore S125 // Sections of code should not be "commented out"
+
             app.UseCors(builder => builder
                 .AllowAnyOrigin()
                 .AllowAnyMethod()

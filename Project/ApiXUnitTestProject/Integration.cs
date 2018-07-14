@@ -83,6 +83,34 @@ namespace ApiXUnitTestProject
             Assert.Equal(1, listDtos.Count(x => x.Name == newIdeas.First().Name));
         }
 
+        [Theory]
+        [InlineData("/api/v1/pets")]
+        [InlineData("/api/v2/pets?IncludeProperties=failhere&sort=-failhere%2C-name&fields=failhere%2Cid&page=1&count=10")]
+        [InlineData("/api/v2/pets?page=failhere&count=10")]
+        [InlineData("/api/v2/pets?IncludeProperties=failhere")]
+        public async Task GetAllFailandReportDetails(string url)
+        {
+         
+            // Act 
+            var response = await _client.GetAsync(url);
+            // Assert 
+
+            var json = await response.Content.ReadAsStringAsync();
+            ((int)response.StatusCode).ShouldBeInRange(202, 511);
+
+            var errorDetails = JsonConvert.DeserializeObject<ErrorDetailsTests>(json);
+         
+            errorDetails.Title.Length.ShouldBeInRange(1, 150);
+            errorDetails.Detail.Length.ShouldNotBeNull();
+            errorDetails.Errors.Count.ShouldBeInRange(0, 10);
+            errorDetails.Status.ShouldNotBeNull();
+            errorDetails.HttpMethod.Length.ShouldBeInRange(3, 10);
+            errorDetails.Type.ShouldContain("http");
+            errorDetails.Instance.ShouldContain("/");
+
+
+        }
+
 
         [Theory]
         [InlineData("/api/v2/pets/Bebe")]
@@ -282,7 +310,7 @@ namespace ApiXUnitTestProject
             var response = await _client.PatchAsync(url + id, body);
 
             // Assert
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, response.StatusCode);
 
         }
 
@@ -302,7 +330,7 @@ namespace ApiXUnitTestProject
             var response = await _client.PatchAsync(url + id, body);
 
             // Assert
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, response.StatusCode);
 
         }
 

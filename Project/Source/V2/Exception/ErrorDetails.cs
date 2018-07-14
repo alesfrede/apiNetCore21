@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Api213.V2.Exception
 {
-    /// <inheritdoc />
+    /// <inheritdoc cref="ValidationProblemDetails" />
     /// <summary>
     /// A machine-readable format for specifying errors in HTTP API responses based on
     ///     https://tools.ietf.org/html/rfc7807.
-    /// 
     /// </summary>
     public class ErrorDetails : ValidationProblemDetails, IErrorDetails
     {
@@ -22,9 +21,12 @@ namespace Api213.V2.Exception
         }
 
         /// <summary>
-        /// HttpStatusCode
+        /// Initializes a new instance of the <see cref="ErrorDetails"/> class.
+        /// 
         /// </summary>
-        public int HttpStatusCode { get; set; }
+        public ErrorDetails()
+        {
+        }
 
         /// <summary>
         /// HttpMethod

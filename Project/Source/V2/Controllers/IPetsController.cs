@@ -69,9 +69,11 @@ namespace Api213.V2.Controllers
 
         /// <summary>
         ///     JsonPatch to Apply the changes for  properties .
-        ///     {"op" : "replace",
-        ///     "path" : "property",
-        ///     "value" : "newvalue"}
+        ///     rfc7386 : This specification defines the JSON merge patch format and processing
+        ///     rules.The merge patch format is primarily intended for use with the
+        ///     HTTP PATCH method as a means of describing a set of modifications to
+        ///     a target resource's content.
+        ///     based in https://tools.ietf.org/html/rfc7386
         /// </summary>
         /// <param name="petName">id</param>
         /// <param name="patch">JsonPatchDocument</param>
@@ -83,3 +85,7 @@ namespace Api213.V2.Controllers
         Task<IActionResult> Patch([FromRoute] string petName, [FromBody] JsonPatchDocument<PetEntity> patch);
     }
 }
+
+
+
+
