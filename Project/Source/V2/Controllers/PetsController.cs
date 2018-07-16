@@ -38,7 +38,7 @@ namespace Api213.V2.Controllers
         /// <summary>
         ///     Read All
         /// </summary>
-        /// <param name="filteringSortingParams">sort y custom fields</param>
+        /// <param name="filteringSortingParams">sort, paging , embed , custom fields</param>
         /// <returns></returns>
         /// <response code="200">successfully retrieved.</response>
         /// <response code="400">BadRequest parameters</response>
