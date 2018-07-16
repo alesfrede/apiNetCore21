@@ -98,7 +98,10 @@ namespace Api213
 
                 options.DescribeAllEnumsAsStrings();
                 options.DescribeAllParametersInCamelCase();
-                options.CustomSchemaIds((type) => type.FullName);
+
+                options.CustomSchemaIds((type) => type.Name);
+
+                // options.CustomSchemaIds((type) => type.FullName);  for namespaces and class
             });
 
         /// <summary>

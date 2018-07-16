@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Api213.V2.Dto;
@@ -25,13 +24,14 @@ namespace Api213.V2.Controllers
     public class PetsController : ControllerBase, IPetsController
     {
         private readonly IPetsManager _manager;
-        private readonly InvalidResponseFactory _invalidResponseFactory;
+        private readonly IInvalidResponseFactory _invalidResponseFactory;
 
         /// <inheritdoc />
-        public PetsController(IPetsManager manager)
-        {
-            _manager = manager ?? throw new ArgumentNullException(nameof(manager));
-            _invalidResponseFactory = new InvalidResponseFactory(this);
+        public PetsController(IPetsManager manager, IInvalidResponseFactory invalidResponseFactory)
+        { 
+            _manager = manager ?? throw new System.ArgumentNullException(nameof(manager));
+            _invalidResponseFactory = invalidResponseFactory ?? throw new System.ArgumentNullException(nameof(invalidResponseFactory));
+            _invalidResponseFactory.SetController(this);
         }
 
         /// <inheritdoc />
@@ -47,11 +47,14 @@ namespace Api213.V2.Controllers
         [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ReadAllAsync([FromQuery] FilteringSortingParams filteringSortingParams)
         {
-            try
+            try 
             {
+                if (!ModelState.IsValid)
+                    return _invalidResponseFactory.Response(new BadRequestObjectResult(ModelState));
+
                 return Ok(await _manager.Get(filteringSortingParams));
             }
-            catch (System.Exception ex)
+            catch (System.Exception ex) 
             {
                 return _invalidResponseFactory.Response(new BadRequestObjectResult(ex), "Argumentos no válidos");
             }
@@ -81,6 +84,10 @@ namespace Api213.V2.Controllers
             {
                 return _invalidResponseFactory.Response(NotFound(ex));
             }
+            catch (System.Exception ex)
+            {
+                return _invalidResponseFactory.Response(new BadRequestObjectResult(ex));
+            }
         }
 
         /// <inheritdoc />
@@ -89,13 +96,13 @@ namespace Api213.V2.Controllers
         /// </summary>
         /// <param name="aPet"></param>
         /// <returns></returns>
-        /// <response code="201">successfully Created.</response>
-        /// <response code="405">Unable to create.</response>
-        /// <response code="400">BadRequest.</response>
+        /// <response code="201">Successfully Created and Location</response>
+        /// <response code="400">Unable to create.</response>
+        /// <response code="500">Unable to create.Exception.</response>
         [HttpPost]
         [ProducesResponseType(typeof(PetDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateAsync([FromBody] PetDto aPet)
         {
             try
@@ -103,9 +110,13 @@ namespace Api213.V2.Controllers
                 var createdPet = await _manager.Create(Map(aPet));
                 return CreatedLocation201(ToView(createdPet));
             }
+            catch (System.DuplicateWaitObjectException e)
+            {
+                return _invalidResponseFactory.Response(StatusCode(StatusCodes.Status400BadRequest, e.Message));
+            }
             catch (System.Exception e)
             {
-                return _invalidResponseFactory.Response(StatusCode(StatusCodes.Status405MethodNotAllowed, e.Message));
+                return _invalidResponseFactory.Response(StatusCode(StatusCodes.Status500InternalServerError, e.Message));
             }
         }
 
@@ -135,6 +146,10 @@ namespace Api213.V2.Controllers
             {
                 return _invalidResponseFactory.Response(NotFound(ex.Message));
             }
+            catch (System.Exception ex)
+            {
+                return _invalidResponseFactory.Response(StatusCode(StatusCodes.Status409Conflict, ex.Message));
+            }
         }
 
         /// <inheritdoc />
@@ -145,9 +160,11 @@ namespace Api213.V2.Controllers
         /// <returns></returns>
         /// <response code="200">successfully retrieved.</response>
         /// <response code="404">NotFound</response>
+        /// <response code="409">Exception</response>
         [HttpDelete("{petName}")]
         [ProducesResponseType(typeof(PetDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status409Conflict)]
         public async Task<IActionResult> DeleteAsync([FromRoute] string petName)
         {
             try
@@ -158,6 +175,10 @@ namespace Api213.V2.Controllers
             catch (NotFoundException ex)
             {
                 return _invalidResponseFactory.Response(NotFound(ex.Message));
+            }
+            catch (System.Exception ex)
+            {
+                return _invalidResponseFactory.Response(StatusCode(StatusCodes.Status409Conflict, ex.Message));
             }
         }
 
@@ -204,13 +225,15 @@ namespace Api213.V2.Controllers
         /// <response code="200">operation successfully.</response>
         /// <response code="400">BadRequest </response>
         /// <response code="404">NotFound</response>
-        /// <response code="405">Unable to update.</response>
+        /// <response code="412">Format Error to patch.</response>
+        /// <response code="409">Unable to update.</response>
         [HttpPatch("{petName}", Name = "UpdateOne")]
         [Consumes("application/json-patch+json", "application/json")]
-        [ProducesResponseType(typeof(IEnumerable<PetDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PetDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status412PreconditionFailed)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Patch([FromRoute] string petName,
             [FromBody] JsonPatchDocument<PetEntity> patch)
         {
@@ -218,8 +241,9 @@ namespace Api213.V2.Controllers
             {
                 var pet = _manager.ReadOne(petName).Result;
                 patch.ApplyTo(pet, ModelState);
+
                 if (!ModelState.IsValid)
-                    return _invalidResponseFactory.Response(StatusCodes.Status400BadRequest, "JsonPatchDocument", "Argumentos no válidos");
+                    return _invalidResponseFactory.Response(StatusCodes.Status412PreconditionFailed, "JsonPatchDocument", "Argumentos no válidos");
 
                 await _manager.Update(pet);
 
@@ -231,7 +255,7 @@ namespace Api213.V2.Controllers
             }
             catch (System.Exception e)
             {
-                return _invalidResponseFactory.Response(StatusCode(StatusCodes.Status405MethodNotAllowed, e.Message));
+                return _invalidResponseFactory.Response(StatusCode(StatusCodes.Status409Conflict, e.Message));
             }
         }
 

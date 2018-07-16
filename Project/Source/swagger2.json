@@ -3,10 +3,10 @@
   "info": {
     "version": "2.0",
     "title": " API 2.0",
-    "description": "A sample application   API NetCore 2.1.3",
+    "description": "A sample application   API versioning.",
     "termsOfService": "Private",
     "contact": {
-      "name": "Ale SA",
+      "name": " SA",
       "email": "xxxx@somewhere.com"
     }
   },
@@ -50,7 +50,7 @@
             "format": "int32"
           },
           {
-            "name": "includeProperties",
+            "name": "embed",
             "in": "query",
             "description": "DependentEntityProperty,DependentEntityProperty",
             "required": false,
@@ -63,12 +63,12 @@
             "schema": {
               "uniqueItems": false,
               "type": "array",
-              "items": { "$ref": "#/definitions/Api213.V2.Dto.PetFullDto" }
+              "items": { "$ref": "#/definitions/PetFullDto" }
             }
           },
           "400": {
             "description": "BadRequest parameters",
-            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+            "schema": { "$ref": "#/definitions/IErrorDetails" }
           }
         }
       },
@@ -84,21 +84,21 @@
             "in": "body",
             "description": "",
             "required": false,
-            "schema": { "$ref": "#/definitions/Api213.V2.Dto.PetDto" }
+            "schema": { "$ref": "#/definitions/PetDto" }
           }
         ],
         "responses": {
           "200": {
             "description": "successfully retrieved.",
-            "schema": { "$ref": "#/definitions/Api213.V2.Dto.PetDto" }
+            "schema": { "$ref": "#/definitions/PetDto" }
           },
           "400": {
             "description": "BadRequest",
-            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+            "schema": { "$ref": "#/definitions/IErrorDetails" }
           },
           "404": {
             "description": "NotFound",
-            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+            "schema": { "$ref": "#/definitions/IErrorDetails" }
           }
         }
       },
@@ -114,21 +114,21 @@
             "in": "body",
             "description": "",
             "required": false,
-            "schema": { "$ref": "#/definitions/Api213.V2.Dto.PetDto" }
+            "schema": { "$ref": "#/definitions/PetDto" }
           }
         ],
         "responses": {
           "201": {
-            "description": "successfully Created.",
-            "schema": { "$ref": "#/definitions/Api213.V2.Dto.PetDto" }
+            "description": "Successfully Created and Location",
+            "schema": { "$ref": "#/definitions/PetDto" }
           },
           "400": {
-            "description": "BadRequest.",
-            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
-          },
-          "405": {
             "description": "Unable to create.",
-            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+            "schema": { "$ref": "#/definitions/IErrorDetails" }
+          },
+          "500": {
+            "description": "Unable to create.Exception.",
+            "schema": { "$ref": "#/definitions/IErrorDetails" }
           }
         }
       }
@@ -152,15 +152,15 @@
         "responses": {
           "200": {
             "description": "successfully retrieved.",
-            "schema": { "$ref": "#/definitions/Api213.V2.Dto.PetDto" }
+            "schema": { "$ref": "#/definitions/PetDto" }
           },
           "404": {
             "description": "NotFound.",
-            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+            "schema": { "$ref": "#/definitions/IErrorDetails" }
           },
           "400": {
             "description": "is invalid.",
-            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+            "schema": { "$ref": "#/definitions/IErrorDetails" }
           }
         }
       },
@@ -182,17 +182,21 @@
         "responses": {
           "200": {
             "description": "successfully retrieved.",
-            "schema": { "$ref": "#/definitions/Api213.V2.Dto.PetDto" }
+            "schema": { "$ref": "#/definitions/PetDto" }
           },
           "404": {
             "description": "NotFound",
-            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+            "schema": { "$ref": "#/definitions/IErrorDetails" }
+          },
+          "409": {
+            "description": "Exception",
+            "schema": { "$ref": "#/definitions/IErrorDetails" }
           }
         }
       },
       "patch": {
         "tags": [ "Pets" ],
-        "summary": "JsonPatch to Apply the changes for  properties .\r\n{\"op\" : \"replace\",\r\n\"path\" : \"property\",\r\n\"value\" : \"newvalue\"}",
+        "summary": "JsonPatch to Apply the changes for  properties based rfc7386\r\n{\"op\" : \"replace\",     \"path\" : \"property\",     \"value\" : \"newvalue\"}",
         "operationId": "ApiV2PetsByPetNamePatch",
         "consumes": [ "application/json-patch+json", "application/json" ],
         "produces": [ "application/json", "application/problem+json" ],
@@ -212,30 +216,30 @@
             "schema": {
               "uniqueItems": false,
               "type": "array",
-              "items": { "$ref": "#/definitions/Microsoft.AspNetCore.JsonPatch.Operations.Operation" }
+              "items": { "$ref": "#/definitions/Operation" }
             }
           }
         ],
         "responses": {
           "200": {
             "description": "operation successfully.",
-            "schema": {
-              "uniqueItems": false,
-              "type": "array",
-              "items": { "$ref": "#/definitions/Api213.V2.Dto.PetDto" }
-            }
+            "schema": { "$ref": "#/definitions/PetDto" }
           },
           "404": {
             "description": "NotFound",
-            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+            "schema": { "$ref": "#/definitions/IErrorDetails" }
           },
           "400": {
             "description": "BadRequest",
-            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+            "schema": { "$ref": "#/definitions/IErrorDetails" }
           },
-          "405": {
+          "412": {
+            "description": "Format Error to patch.",
+            "schema": { "$ref": "#/definitions/IErrorDetails" }
+          },
+          "409": {
             "description": "Unable to update.",
-            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+            "schema": { "$ref": "#/definitions/IErrorDetails" }
           }
         }
       }
@@ -286,7 +290,7 @@
             "format": "int32"
           },
           {
-            "name": "includeProperties",
+            "name": "embed",
             "in": "query",
             "description": "DependentEntityProperty,DependentEntityProperty",
             "required": false,
@@ -299,23 +303,23 @@
             "schema": {
               "uniqueItems": false,
               "type": "array",
-              "items": { "$ref": "#/definitions/Api213.V2.Dto.PetDto" }
+              "items": { "$ref": "#/definitions/PetDto" }
             }
           },
           "404": {
             "description": "NotFound",
-            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+            "schema": { "$ref": "#/definitions/IErrorDetails" }
           },
           "400": {
             "description": "Status400 BadRequest",
-            "schema": { "$ref": "#/definitions/Api213.V2.Exception.IErrorDetails" }
+            "schema": { "$ref": "#/definitions/IErrorDetails" }
           }
         }
       }
     }
   },
   "definitions": {
-    "Api213.V2.Dto.PetFullDto": {
+    "PetFullDto": {
       "description": "PetOutPut",
       "required": [ "name" ],
       "type": "object",
@@ -334,12 +338,12 @@
           "type": "string"
         },
         "owner": {
-          "$ref": "#/definitions/Api213.V2.Dto.OwnerDto",
+          "$ref": "#/definitions/OwnerDto",
           "description": ""
         }
       }
     },
-    "Api213.V2.Dto.OwnerDto": {
+    "OwnerDto": {
       "description": "OwnerDto",
       "type": "object",
       "properties": {
@@ -354,21 +358,16 @@
         }
       }
     },
-    "Api213.V2.Exception.IErrorDetails": {
-      "description": "",
+    "IErrorDetails": {
+      "description": "A machine-readable format for specifying errors in HTTP API responses based on\r\nhttps://tools.ietf.org/html/rfc780 and https://tools.ietf.org/html/rfc2616",
       "type": "object",
       "properties": {
-        "httpStatusCode": {
-          "format": "int32",
-          "description": "HttpStatusCode",
-          "type": "integer"
-        },
         "httpMethod": {
-          "description": "HttpMethod",
+          "description": "HttpMethod Verbs [rfc2616]\r\nThe set of common methods for HTTP/1.1 is defined below. Although this set can\r\nbe expanded, additional methods cannot be assumed to share the same semantics \r\nfor separately extended clients and servers.\r\nrfc2616-sec9.html#sec9",
           "type": "string"
         },
         "errors": {
-          "description": "",
+          "description": "Gets the validation errors associated for request",
           "type": "object",
           "additionalProperties": {
             "uniqueItems": false,
@@ -378,29 +377,29 @@
           "readOnly": true
         },
         "type": {
-          "description": "",
+          "description": "A URI reference [RFC3986] that identifies the problem type. This specification\r\nencourages that, when dereferenced, it provide human-readable documentation for\r\nthe problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member\r\nis not present, its value is assumed to be \"about :blank\".",
           "type": "string"
         },
         "title": {
-          "description": "",
+          "description": "A short, human-readable summary of the problem type.It SHOULD NOT change from\r\noccurrence to occurrence of the problem, except for purposes of localization(e.g.,\r\nusing proactive content negotiation; see[RFC7231], Section 3.4).",
           "type": "string"
         },
         "status": {
           "format": "int32",
-          "description": "",
+          "description": "The HTTP status code([RFC7231], Section 6) generated by the origin server\r\nEach Status-Code is described below, including a description of which method(s) \r\nit can follow and any metainformation required in the response.\r\nrfc2616-sec10.html#sec10",
           "type": "integer"
         },
         "detail": {
-          "description": "",
+          "description": "A human-readable explanation specific to this occurrence of the problem.",
           "type": "string"
         },
         "instance": {
-          "description": "",
+          "description": "A URI reference that identifies the specific occurrence of the problem.It may\r\nor may not yield further information if dereferenced.",
           "type": "string"
         }
       }
     },
-    "Api213.V2.Dto.PetDto": {
+    "PetDto": {
       "description": "PetOutPut",
       "required": [ "name" ],
       "type": "object",
@@ -420,7 +419,7 @@
         }
       }
     },
-    "Microsoft.AspNetCore.JsonPatch.Operations.Operation": {
+    "Operation": {
       "type": "object",
       "properties": {
         "value": { "type": "object" },

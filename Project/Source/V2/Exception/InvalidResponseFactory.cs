@@ -5,10 +5,11 @@ using Newtonsoft.Json;
 
 namespace Api213.V2.Exception
 {
+    /// <inheritdoc />
     /// <summary>
     /// InvalidResponseFactory
     /// </summary>
-    public class InvalidResponseFactory
+    public class InvalidResponseFactory : IInvalidResponseFactory
     {
         /// <summary>
         /// 
@@ -18,7 +19,7 @@ namespace Api213.V2.Exception
         /// <summary>
         /// 
         /// </summary>
-        private readonly ControllerBase _controller;
+        private ControllerBase _controller;
 
         /// <summary>
         /// 
@@ -34,6 +35,14 @@ namespace Api213.V2.Exception
         {
             _controller = petsController;
             _context = _controller.HttpContext;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InvalidResponseFactory"/> class.
+        /// 
+        /// </summary>
+        public InvalidResponseFactory()
+        {
         }
 
         /// <summary>
@@ -108,7 +117,7 @@ namespace Api213.V2.Exception
         /// <param name="extraMessage"></param>
         /// <param name="shortHumanReadableSummary"></param>
         /// <returns></returns>
-        public IActionResult Response2(int? code, string extraMessage, string shortHumanReadableSummary = null)
+        public IActionResult ResponseGenericResult(int? code, string extraMessage, string shortHumanReadableSummary = null)
         {
             var codehttp = GenericError;
             if (code != null && code <= 511 && code >= 100)
@@ -143,10 +152,20 @@ namespace Api213.V2.Exception
             response.StatusCode = _context.Response.StatusCode;
             
             response.WriteAsync(JsonConvert.SerializeObject(
-                Response2(
+                ResponseGenericResult(
                     _context.Response.StatusCode,
                 "extramesa",
                 "Exception")));
+        }
+
+        /// <summary>
+        /// SetController
+        /// </summary>
+        /// <param name="controllerBase"></param>
+        public void SetController(ControllerBase controllerBase)
+        {
+            _controller = controllerBase;
+            _context = _controller.HttpContext;
         }
     }
 }

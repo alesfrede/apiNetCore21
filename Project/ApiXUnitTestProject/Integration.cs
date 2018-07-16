@@ -66,8 +66,8 @@ namespace ApiXUnitTestProject
 
         [Theory]
         [InlineData("/api/v2/pets?sort=-id%2C-name&fields=name%2Cid&page=1&count=10")]
-        [InlineData("/api/v2/pets?IncludeProperties=Owner&sort=-id%2C-name&fields=name%2Cid&page=1&count=10")]
-        [InlineData("/api/v2/pets?IncludeProperties=Owner")]
+        [InlineData("/api/v2/pets?embed=Owner&sort=-id%2C-name&fields=name%2Cid&page=1&count=10")]
+        [InlineData("/api/v2/pets?embed=Owner")]
         public async Task GetSortedandPagedSuccess(string url)
         {
             //_client = _factory.CreateClient(); 
@@ -85,9 +85,9 @@ namespace ApiXUnitTestProject
 
         [Theory]
         [InlineData("/api/v1/pets")]
-        [InlineData("/api/v2/pets?IncludeProperties=failhere&sort=-failhere%2C-name&fields=failhere%2Cid&page=1&count=10")]
+        [InlineData("/api/v2/pets?embed=failhere&sort=-failhere%2C-name&fields=failhere%2Cid&page=1&count=10")]
         [InlineData("/api/v2/pets?page=failhere&count=10")]
-        [InlineData("/api/v2/pets?IncludeProperties=failhere")]
+        [InlineData("/api/v2/pets?embed=failhere")]
         public async Task GetAllFailandReportDetails(string url)
         {
          
@@ -132,13 +132,41 @@ namespace ApiXUnitTestProject
         }
 
 
+        [Theory]
+        [InlineData("/api/v2/pets/Beb2e")]
+        public async Task GetOneNotFoundFail(string url)
+        {
+            // Arrange
+  
+            // Act
+            var response = await _client.GetAsync(url);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    
+        }
+
+
+        //[Theory]
+        //[InlineData("/api/v2/pets/'''")]
+        //public async Task GetOneNotBadRequestFail(string url)
+        //{
+        //    // Arrange 
+
+        //    // Act
+        //    var response = await _client.GetAsync(url);
+
+        //    // Assert
+        //    Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        //}
 
 
 
 
         [Theory]
         [InlineData("/api/v2/pets/Search?namelike=")]
-        [InlineData("/api/v2/pets/Search?IncludeProperties=Owner&namelike=")]
+        [InlineData("/api/v2/pets/Search?embed=Owner&namelike=")]
         public async Task SearchSuccess(string url)
         {
             // Arrange
@@ -155,7 +183,7 @@ namespace ApiXUnitTestProject
         }
 
         [Theory]
-        [InlineData("/api/v2/pets/Search?namelike=Bebe&includeProperties=Owner")]
+        [InlineData("/api/v2/pets/Search?namelike=Bebe&embed=Owner")]
         public async Task SearchAndIncludePropertiesSuccess(string url)
         {
             // Arrange
@@ -264,7 +292,7 @@ namespace ApiXUnitTestProject
 
             // Assert
             Assert.NotEqual(HttpStatusCode.Created, response.StatusCode);
-            Assert.Equal(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             //await response.Content.ReadAsStringAsync();
             //Assert.Equal(newIdea.Name, ideareturnDto.Name);
 
@@ -310,7 +338,7 @@ namespace ApiXUnitTestProject
             var response = await _client.PatchAsync(url + id, body);
 
             // Assert
-            Assert.Equal(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
 
         }
 
@@ -330,7 +358,7 @@ namespace ApiXUnitTestProject
             var response = await _client.PatchAsync(url + id, body);
 
             // Assert
-            Assert.Equal(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.Equal(HttpStatusCode.Conflict , response.StatusCode);
 
         }
 
@@ -350,7 +378,7 @@ namespace ApiXUnitTestProject
             var response = await _client.PatchAsync(url + id, body);
 
             // Assert
-            Assert.Equal(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
 
         }
 

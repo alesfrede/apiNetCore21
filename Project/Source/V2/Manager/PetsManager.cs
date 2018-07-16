@@ -55,6 +55,8 @@ namespace Api213.V2.Manager
         public Task<PetEntity> Create(PetEntity pet)
         {
             var newpet = new PetEntity { Id = pet.Id, Description = pet.Description, Name = pet.Name };
+            if (IsExists(pet.Name).Result)
+                throw new DuplicateWaitObjectException(pet.Name);
             _context.Insert(newpet);
                _context.Save();
 
@@ -68,21 +70,28 @@ namespace Api213.V2.Manager
         /// <returns></returns>
         public Task<PetEntity> Replace(PetEntity pet)
         {
-            IsExists(pet.Name);
-            Delete(pet.Name);
-            var newpet = Create(pet);
-             _context.Save();
-            return Task.FromResult(newpet.Result);
+            if (IsExists(pet.Name).Result)
+            {
+                Delete(pet.Name);
+                var newpet = Create(pet);
+                _context.Save();
+                return Task.FromResult(newpet.Result);
+            }
+
+            throw new NotFoundException(pet.Name + " NotFound");
         }
 
         /// <inheritdoc />
         public Task<PetEntity> Update(PetEntity pet)
         {
-            IsExists(pet.Name);
-                   
-             _context.Update(pet);
-            _context.Save();
-            return Task.FromResult(pet);
+            if (IsExists(pet.Name).Result)
+            {
+                _context.Update(pet);
+                _context.Save();
+                return Task.FromResult(pet);
+            }
+
+            throw new NotFoundException(pet.Name + " NotFound");
         }
 
         /// <inheritdoc />
@@ -92,11 +101,15 @@ namespace Api213.V2.Manager
         /// <returns></returns>
         public Task<PetEntity> Delete(string name)
         {
-            IsExists(name);
-            var pet = _context.Get(x => x.Name == name).First();
-            _context.Delete(pet);
-              _context.Save();
-            return Task.FromResult(pet);
+            if (IsExists(name).Result)
+            {
+                var pet = _context.Get(x => x.Name == name).First();
+                _context.Delete(pet);
+                _context.Save();
+                return Task.FromResult(pet);
+            }
+
+            throw new NotFoundException(name + " NotFound");
         }
 
         /// <summary>
@@ -118,7 +131,7 @@ namespace Api213.V2.Manager
         /// <returns></returns>
         public IEnumerable<dynamic> GetByNameSubstring(string namelike, FilteringSortingParams filteringSortingParams)
         {
-            var queryable = _context.Includes(filteringSortingParams.IncludeProperties);
+            var queryable = _context.Includes(filteringSortingParams.Embed);
 
             if (namelike != null)
                 queryable = queryable.Where(x => x.Name.Contains(namelike));
@@ -145,9 +158,7 @@ namespace Api213.V2.Manager
         public Task<bool> IsExists(string name)
         {
             var petexist = _context.Get(x => x.Name == name).Any();
-            if (!petexist)
-                throw new NotFoundException(name + "NotFound");
-            return Task.FromResult(false);
+            return Task.FromResult(petexist);
         }
     }
 }

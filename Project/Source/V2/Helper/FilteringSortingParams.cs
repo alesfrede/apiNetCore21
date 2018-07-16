@@ -36,7 +36,7 @@
         /// <summary>
         /// DependentEntityProperty,DependentEntityProperty
         /// </summary>
-        public string IncludeProperties { get; set; } = string.Empty;
+        public string Embed { get; set; } = string.Empty;
 
         /// <summary>
         /// PagingParams

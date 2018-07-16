@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Api213.V2.Dal;
+using Api213.V2.Exception;
 using Api213.V2.Interface;
 using Api213.V2.Manager;
 using Api213.V2.Models;
@@ -94,6 +95,7 @@ namespace Api213
             services.AddTransient(typeof(IGenericRepository<PetEntity>), typeof(GenericRepository<PetEntity>));
           
             services.AddTransient<IPetsManager, PetsManager>();
+            services.AddTransient<IInvalidResponseFactory, InvalidResponseFactory>();
         }
 
         /// <summary>
@@ -113,7 +115,7 @@ namespace Api213
             if (HostingEnvironment.IsDevelopment())
             {
                // app.UseDeveloperExceptionPage();
-                Logger.LogWarning($@" IsDevelopment" + HostingEnvironment.ContentRootPath);
+                Logger.LogWarning(" IsDevelopment" + HostingEnvironment.ContentRootPath);
             }
             else
             {

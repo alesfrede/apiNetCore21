@@ -121,7 +121,7 @@ namespace Api213.V2.Dal
         /// <returns></returns>
         public IQueryable<dynamic> Get(FilteringSortingParams filteringSortingParams)
         {
-            var query1 = Includes(filteringSortingParams.IncludeProperties);
+            var query1 = Includes(filteringSortingParams.Embed);
 
             var query = SortAndFieldsAndFilterList(query1, filteringSortingParams);
 

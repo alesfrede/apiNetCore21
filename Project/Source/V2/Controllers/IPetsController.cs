@@ -18,6 +18,7 @@ namespace Api213.V2.Controllers
         /// <param name="filteringSortingParams">sort y custom fields</param>
         /// <returns></returns>
         /// <response code="200">successfully retrieved.</response>
+        /// <response code="400">BadRequest parameters</response>
         Task<IActionResult> ReadAllAsync(FilteringSortingParams filteringSortingParams);
 
         /// <summary>
@@ -27,6 +28,7 @@ namespace Api213.V2.Controllers
         /// <returns>Pet</returns>
         /// <response code="200">successfully retrieved.</response>
         /// <response code="400">is invalid.</response>
+        /// <response code="404">NotFound.</response>
         Task<IActionResult> ReadOneAsync(string petName);
 
         /// <summary>
@@ -34,8 +36,9 @@ namespace Api213.V2.Controllers
         /// </summary>
         /// <param name="aPet"></param>
         /// <returns></returns>
-        /// <response code="201">successfully Created.</response>
-        /// <response code="400">BadRequest.</response>
+        /// <response code="201">Successfully Created and Location</response>
+        /// <response code="400">Unable to create.</response>
+        /// <response code="500">Unable to create.Exception.</response>
         Task<IActionResult> CreateAsync([FromBody] PetDto aPet);
 
         /// <summary>
@@ -55,6 +58,7 @@ namespace Api213.V2.Controllers
         /// <returns></returns>
         /// <response code="200">successfully retrieved.</response>
         /// <response code="404">NotFound</response>
+        /// <response code="409">Exception</response>
         Task<IActionResult> DeleteAsync(string petName);
 
         /// <summary>
@@ -65,6 +69,7 @@ namespace Api213.V2.Controllers
         /// <returns>Pets</returns>
         /// <response code="200">successfully retrieved.</response>
         /// <response code="404">NotFound</response>
+        /// <response code="400">Status400 BadRequest</response>
         IActionResult Search([FromQuery] string namelike, FilteringSortingParams filteringSortingParams);
 
         /// <summary>
@@ -81,7 +86,8 @@ namespace Api213.V2.Controllers
         /// <response code="200">operation successfully.</response>
         /// <response code="400">BadRequest </response>
         /// <response code="404">NotFound</response>
-        /// <response code="405">Unable to update.</response>
+        /// <response code="412">Format Error to patch.</response>
+        /// <response code="409">Unable to update.</response>
         Task<IActionResult> Patch([FromRoute] string petName, [FromBody] JsonPatchDocument<PetEntity> patch);
     }
 }
