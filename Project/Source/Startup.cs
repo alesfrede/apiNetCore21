@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using Api213.V2.Dal;
 using Api213.V2.Exception;
 using Api213.V2.Interface;
@@ -59,11 +60,35 @@ namespace Api213
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            // services.AddMvc(options => {    options.Filters.Add(typeof(UnhandledExceptionFilterAttribute)); });
             services.AddDbContext<DataContext>(opt =>
                 opt.UseInMemoryDatabase("DataContextList"));
+
+            services.AddHttpContextAccessor();
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+                options.SuppressConsumesConstraintForFormFileParameters = true;
+            });
+
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = actionContext =>
+                {
+                    var errors = actionContext.ModelState
+                        .Where(e => e.Value.Errors.Count > 0)
+                        .Select(e => new
+                        {
+                            Name = e.Key,
+                            Message = e.Value.Errors.First().ErrorMessage
+                        }).ToArray();
+                    
+                    var invalidResponseFactory = new InvalidResponseFactory(actionContext.HttpContext);
+                    var errorreturn = new BadRequestObjectResult(errors);
+                    return invalidResponseFactory.ResponseGenericResult(errorreturn.StatusCode, errorreturn.Value.ToString(), "Invalid Model State");
+                };
+            });
+
             services.AddScoped<DbContext, DataContext>(f => f.GetService<DataContext>());
-            #region AddApiVersioning 
 
             services.AddMvcCore().AddVersionedApiExplorer(
                 options =>
@@ -81,9 +106,8 @@ namespace Api213
                     o.AssumeDefaultVersionWhenUnspecified = true;
                     o.DefaultApiVersion = new ApiVersion(2, 0);
                     o.ReportApiVersions = true;
+                    o.ErrorResponses = new InvalidResponseFactory();
                 });
-
-            #endregion
 
             #region AddSwaggerGen
 
@@ -109,12 +133,9 @@ namespace Api213
             ILoggerFactory loggerFactory,
             IApiVersionDescriptionProvider provider)
         {
-            // TODO: ExceptionHandler
-            
-            // app.UseMiddleware<ExceptionHandler>();
             if (HostingEnvironment.IsDevelopment())
             {
-               // app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage();
                 Logger.LogWarning(" IsDevelopment" + HostingEnvironment.ContentRootPath);
             }
             else
@@ -136,7 +157,7 @@ namespace Api213
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseMvc();
-
+            
             app.UseSwagger();
           
             app.UseSwaggerUI(

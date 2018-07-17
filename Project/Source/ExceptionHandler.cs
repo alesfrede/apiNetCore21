@@ -28,16 +28,33 @@ namespace Api213
             try
             {
                 await _next.Invoke(context);
-               
-                if (context.Response.StatusCode != StatusCodes.Status200OK &&
-                    context.Response.StatusCode != StatusCodes.Status201Created)
+
+                if (context.Response.StatusCode == StatusCodes.Status400BadRequest)
                 {
-                    new InvalidResponseFactory(context).WriteAsync(null);
+                    if (!context.Response.HasStarted)
+                    {
+                        new InvalidResponseFactory(context).WriteAsync(null);
+                    }
+                    else
+                    {
+                        context.Response.Clear();
+                        context.Response.StatusCode = 500;
+                        new InvalidResponseFactory(context).WriteAsync(null);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                new InvalidResponseFactory(context).WriteAsync(ex);
+                if (!context.Response.HasStarted)
+                {
+                    new InvalidResponseFactory(context).WriteAsync(ex);
+                }
+                else
+                {
+                    context.Response.Clear();
+                    context.Response.StatusCode = 500;
+                    new InvalidResponseFactory(context).WriteAsync(ex);
+                }
             }
         }
     }
