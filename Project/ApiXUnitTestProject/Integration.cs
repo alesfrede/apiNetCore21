@@ -323,6 +323,27 @@ namespace ApiXUnitTestProject
 
 
         [Theory]
+        [InlineData("/api/v2/pets/Merge/", "Bebe")]
+        [InlineData("/api/v2/pets/Merge/", "Dogui")]
+        public async Task PatchMergeOneSuccess(string url, string id)
+        {
+            var newIdea = Utilities.GetTestEntitiesPet().First(e => e.Name == id);
+            var patch = new JObject(new JProperty("Description", "Do")).ToString();
+
+            var body = new StringContent(patch, Encoding.UTF8, "application/json-patch+json");
+
+            // Act
+            var response = await _client.PatchAsync(url + id, body);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            var ideareturnDto = JsonConvert.DeserializeObject<PetTestDto>(await response.Content.ReadAsStringAsync());
+            Assert.Equal(newIdea.Name, ideareturnDto.Name);
+            Assert.Equal("Do", ideareturnDto.Description);
+        }
+
+
+        [Theory]
         [InlineData("/api/v2/pets/", "Bebe")]
         public async Task PatchOneFailJsonPatchPropertyname(string url, string id)
         {
@@ -344,10 +365,10 @@ namespace ApiXUnitTestProject
 
         [Theory]
         [InlineData("/api/v2/pets/", "Bebe")]
+        [InlineData("/api/v2/pets/Merge/", "Bebe")]
         public async Task PatchOneFailJsonPatchFormat(string url, string id)
         {
-           // var newIdea = Utilities.GetTestEntitiesPet().First(e => e.Name == id);
-            var patch = new JArray(new JObject(
+           var patch = new JArray(new JObject(
                 new JProperty("op", ""),
                 new JProperty("path", "Propiedad1"),
                 new JProperty("value", "Do")
@@ -384,6 +405,7 @@ namespace ApiXUnitTestProject
 
         [Theory]
         [InlineData("/api/v2/pets/", "xxxx")]
+        [InlineData("/api/v2/pets/Merge/", "xxxx")]
         public async Task PatchOneNotFound(string url, string id)
         {
             var patch = new JArray(new JObject(

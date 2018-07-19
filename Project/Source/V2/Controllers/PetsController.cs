@@ -260,6 +260,50 @@ namespace Api213.V2.Controllers
         }
 
         /// <summary>
+        ///     JsonMerge
+        ///      
+        /// </summary>
+        /// <param name="petName"></param>
+        /// <param name="patch"></param>
+        /// <returns>updated</returns>
+        /// <response code="200">operation successfully.</response>
+        /// <response code="400">BadRequest </response>
+        /// <response code="404">NotFound</response>
+        /// <response code="412">Format Error to patch.</response>
+        /// <response code="409">Unable to update.</response>
+        [HttpPatch("Merge/{petName}", Name = "Merge")]
+        [Consumes("application/json-patch+json", "application/json")]
+        [ProducesResponseType(typeof(PetDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status412PreconditionFailed)]
+        [ProducesResponseType(typeof(IErrorDetails), StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> JsonMergePatch([FromRoute] string petName,
+            [FromBody] JsonMergePatchDocument<PetEntity> patch)
+        {
+            try
+            {
+                var pet = _manager.ReadOne(petName).Result;
+                patch.ApplyTo(pet, ModelState);
+          
+                if (!ModelState.IsValid)
+                    return _invalidResponseFactory.Response(StatusCodes.Status412PreconditionFailed, "JsonPatchDocument", "Argumentos no válidos");
+
+                await _manager.Update(pet);
+
+                return Ok(pet);
+            }
+            catch (NotFoundException ex)
+            {
+                return _invalidResponseFactory.Response(NotFound(ex.Message));
+            }
+            catch (System.Exception e)
+            {
+                return _invalidResponseFactory.Response(StatusCode(StatusCodes.Status409Conflict, e.Message));
+            }
+        }
+
+        /// <summary>
         ///     map
         /// </summary>
         /// <param name="pet"></param>
